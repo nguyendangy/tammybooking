@@ -1,0 +1,31 @@
+{% load static %}
+<div class="container">
+    <div class="shadow-lg p-5">
+
+        <div class="row mt-5">
+            <div class="col-12">
+                <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} review for room number {{ rooms.number }}</h1>
+                <form method="POST" action="{% url 'room-review' pk=rooms %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div id="rate"></div>
+                    <input type="submit" value="Submit" name="ratings" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+        <br>
+
+    </div>
+</div>
+
+{% block extra_js %}
+  <script>
+    $(function() {
+      $('#rate').raty({
+        path: '//cdn.jsdelivr.net/jquery.raty/2.7.0/img/',
+        scoreName: 'rate',
+      });
+    });
+  </script>
+{% endblock %}
+

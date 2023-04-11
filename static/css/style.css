@@ -1,0 +1,157 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    box-sizing: border-box;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+.search-form {
+    margin: 20px;
+}
+
+.main-page {
+    margin: 0 100px 0 100px;
+}
+
+.book-categories {
+    margin: 20px 0 20px 0;
+    width: auto;
+    height: auto;
+}
+
+.height-rate {
+    width: auto;
+    height: auto;
+    /* background-color: cadetblue; */
+}
+
+.communicate-connect {
+    margin-top: 20px;
+    width: auto;
+    height: auto;
+}
+
+.img-cate-row-2 {
+    background-color: aquamarine;
+}
+
+.img-cate-1 {
+    background-size: cover;
+
+}
+
+.img-row-1 {
+    display: block;
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+}
+
+#brightness:hover {
+    filter: brightness(.9);
+}
+
+.img-row-2 {
+    display: block;
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.row-row-2 {
+    margin-top: 30px;
+}
+
+/* Centered text */
+.centered {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.img-text {
+    color: whitesmoke;
+    text-shadow: 2px 2px 4px #000000;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+/* MultiCarousel */
+.carousel-indicators{		
+    top:105%;		
+}
+		
+.carousel-indicators li{
+    background-color:rgb(56, 40, 40);
+}
+.carousel-control-prev-icon {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='grey' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='grey' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+.col-xl-12{
+    padding: 0;
+}
+
+.carousel-control-next {
+    right: -90px !important;
+}
+
+.carousel-control-prev {
+    left: -90px !important;
+}
+.card-body{
+    padding:0;
+}
+
+.card{
+    border:none !important;
+}
+
+.card-title {
+    margin-bottom: 0 !important;
+}
+.card-text{
+    margin-bottom: 0 !important;
+    font-size: 15px !important;
+    color: rgb(155, 147, 147);
+}
+
+.images-room{
+    height: 150px;
+    width: 150px;
+}
+
+.hotel-footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: left;
+  }
+  
+  .footer-content {
+    margin: 0 100px 0 100px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  

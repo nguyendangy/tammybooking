@@ -1,0 +1,197 @@
+{% load static %}
+<style>
+   .line-1 {
+      margin: 0 auto;
+      padding: 0 15px 0 0;
+   }
+
+   .book-categories {
+      margin: 20px 0 20px 0;
+      width: auto;
+      height: auto;
+   }
+
+   .line-2 {
+      margin: 0 auto;
+      padding: 0 0 0 15px;
+   }
+
+   .left-margin {
+      margin: 0 5px 0 0;
+   }
+
+   /* .left-margin:last-child {
+      margin-right: 0;
+   } */
+
+
+   /* .col-md-6 .line-1{
+      padding: 0 10px 0 0;
+   } */
+   .location {
+      position: relative;
+      box-sizing: border-box;
+      margin: 0 auto;
+      max-width: 100%;
+   }
+
+   .rate {
+      position: relative;
+      box-sizing: border-box;
+      margin: 0 auto;
+      max-width: 100%;
+   }
+
+   .col-md-3 {
+      padding: 0;
+   }
+
+   .room-card {
+      background-color: #f1f1f1;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 2px 2px 5px #ccc;
+   }
+
+   .room-card h3 {
+      font-size: 1.5em;
+      margin-bottom: 0.5em;
+   }
+
+   .room-card p {
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+   }
+
+   .room-card img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 0.5em;
+   }
+
+   .room-card .rating {
+      color: orange;
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+   }
+</style>
+<div class="main-page">
+
+   <div class="col-3 centered" style="margin-top:38px;">
+      <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>Book Now</strong> </a>
+   </div>
+
+   <!-- categories -->
+   <div class="book-categories">
+      <h2>Location Categories</h2>
+      <div class="img-cate-1">
+         <div class="row location">
+            <div class=" line-1 col-md-6">
+               <img class="img-row-1" id="brightness" src="{%static '/images/hue.jpg'%}" alt="">
+               <div class="centered img-text">Huế</div>
+            </div>
+            <div class="line-2  col-md-6">
+               <img class="img-row-1" id="brightness" src="{%static '/images/da-nang.jpg'%}" alt="">
+               <div class="centered img-text">Da Nang</div>
+            </div>
+         </div>
+         <div class="row row-row-2">
+            <div class="col  col-md-4">
+               <img class="img-row-2" id="brightness" src="{%static '/images/hoi-an.jpg'%}" alt="">
+               <div class="centered img-text">Hoi An</div>
+            </div>
+            <div class="col  col-md-4">
+               <img class="img-row-2" id="brightness" src="{%static '/images/ha-noi.jpg'%}" alt="">
+               <div class="centered img-text">Ha Noi</div>
+            </div>
+            <div class="col  col-md-4">
+               <img class="img-row-2" id="brightness" src="{%static '/images/hcm.jpg'%}" alt="">
+               <div class="centered img-text">Ho Chi Minh</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- Ratting -->
+   <section class="height-rate">
+      <h2>High Rating Hotel</h2>
+      <div class="row rate">
+         {% for room in top_rooms %}
+         <div class="col-md-3">
+            <div class="room-card left-margin">
+               <h3><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a></h3>
+
+               <img src="{{ room.images }}" alt="{{ room.name }}">
+               <p>Room number: {{ room.number }}</p>
+               <p>General price: ${{ room.price }}</p>
+               {% if room.discount %}
+               <p class="discount">Discount percent: {{ room.discount }}% OFF</p>
+               <p class="price">Discount price: ${{ room.discounted_price }}</p>
+               {% endif %}
+               <p>Average rating: {{ room.average_rating|floatformat:1 }} - {{ room.countreview }} user</p>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+
+   </section>
+   <!-- Comment -->
+   <!-- <div class="communicate-connect">
+      <p>communicate_connect</p>
+   </div> -->
+   <section class="communicate-connect">
+      <div class="container">
+         <div class="comment-title">
+            <h2 class="text-black">Connect with other travelers</h2>
+         </div>
+
+         <div id="carouselFourColumn" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+   </section>
+</div>
