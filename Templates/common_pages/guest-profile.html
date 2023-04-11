@@ -1,46 +1,37 @@
 <div class="container">
     <div class="shadow-lg p-5">
         <div class="row mt-5">
-            <div class="col-6">
+            <div class="col-4">
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="p-2 h4">
-                        <span>Name:</span>
-                        {% if guest.user.id != request.user.id %}
-                        <span class="font-weight-normal">{{guest.user.first_name}} </span>
-                        {% else %}
-                        <input type="text" class="form-control border border-secondary" id="id_first_name"
-                            value="{{guest.user.first_name}}" name="first_name">
-                        {% endif %}
+                        <span>Avatar: </span>
+                        <img src="/media/images.jpeg" height="200" width="200">
                     </div>
-
-                    <br>
-                    <div class="p-2 h4">
-                        <span>Surname:</span>
-                        {% if guest.user.id != request.user.id %}
-                        <span class="font-weight-normal"> {{guest.user.last_name}}</span>
-                        {% else %}
-                        <input type="text" class="form-control border border-secondary" id="id_last_name"
-                            value="{{guest.user.last_name}}" name="last_name">
-                        {% endif %}
-                    </div>
-
-
-                    <div class="p-2 h4">
-                        <span>Email :</span>
-                        <span class="font-weight-normal">{{guest.user.email}}</span>
-                    </div>
-
-                    <br>
-
-                    <div class="p-2 h4">
-                        <span>Account Creation Date:</span>
-                        <span class="font-weight-normal">{{guest.user.date_joined}}</span>
-                    </div>
-
+                    
             </div>
 
-            <div class="col-6">
+            <div class="col-8">
+                <div class="p-2 h4">
+                    <span>Name:</span>
+                    {% if guest.user.id != request.user.id %}
+                    <span class="font-weight-normal">{{guest.user.first_name}} </span>
+                    {% else %}
+                    <input type="text" class="form-control border border-secondary" id="id_first_name"
+                        value="{{guest.user.first_name}}" name="first_name">
+                    {% endif %}
+                </div>
+
+                <br>
+                <div class="p-2 h4">
+                    <span>Surname:</span>
+                    {% if guest.user.id != request.user.id %}
+                    <span class="font-weight-normal"> {{guest.user.last_name}}</span>
+                    {% else %}
+                    <input type="text" class="form-control border border-secondary" id="id_last_name"
+                        value="{{guest.user.last_name}}" name="last_name">
+                    {% endif %}
+                </div>
 
                 <div class="p-2 h4">
                     <span>Phone Number: </span>
@@ -52,6 +43,21 @@
                         value="{{guest.phoneNumber}}" name="phoneNumber">
                     {% endif %}
                 </div>
+
+                <div class="p-2 h4">
+                    <span>Email :</span>
+                    <span class="font-weight-normal">{{guest.user.email}}</span>
+                </div>
+
+                <br>
+
+                <div class="p-2 h4">
+                    <span>Account Creation Date:</span>
+                    <span class="font-weight-normal">{{guest.user.date_joined}}</span>
+                </div>
+                
+
+                
 
                 <!-- <div class="p-2 h4">
                     <span>Password: </span>

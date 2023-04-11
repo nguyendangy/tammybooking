@@ -1,12 +1,25 @@
 <!--Admin Navbar-->
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg py-3 " role="navigation">
     <div class="container">
+        {% if role == 'guest' %}
+        <a href="{% url 'guest-home'  request.user.guest.user.id %}" class="navbar-brand">
+
+            <!-- <h2 class="text-capitalize">
+                Tammybooking.xyz
+            </h2> -->
+            <img src="/media/logo.png" height="100" width="200">
+        </a>
+        {% else %} 
         <a href="" class="navbar-brand">
 
-            <h2 class="text-capitalize">
+            <!-- <h2 class="text-capitalize">
                 Tammybooking.xyz
-            </h2>
+            </h2> -->
+            <img src="/media/logo.png" height="100" width="200">
         </a>
+
+        {% endif %} 
+
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarTags">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -14,16 +27,16 @@
         <div class="collapse navbar-collapse" id="navbarTags">
             <ul class="navbar-nav ml-auto">
                 
-                {% if role == 'guest' %}
+                <!-- {% if role == 'guest' %}
                 <li class="nav-item p-2 ">
                     <a class="nav-link" href="{% url 'guest-home'  request.user.guest.user.id %}">Home</a>
                 </li>
-                {% endif %}
+                {% endif %} -->
 
                 <li class="nav-item dropdown p-2">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Options
+                        <i class="fas fa-list-ul"></i> Options
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
@@ -90,7 +103,7 @@
                 <li class="nav-item dropdown p-2">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        User
+                        <i class="fas fa-user"></i> User
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% if role == 'staff' or role == 'receptionist' or role == 'admin' or role == 'manager' %}
