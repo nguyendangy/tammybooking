@@ -1,10 +1,11 @@
+from PIL import Image
 from django.db import models
 from django.utils import timezone
 from multiselectfield import MultiSelectField
 
 from accounts.models import Guest
 from django.db.models import Avg, Count
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 
 def upload_room_images(instance,filename):
@@ -40,28 +41,19 @@ class Room(models.Model):
     number = models.IntegerField(primary_key=True)
     capacity = models.SmallIntegerField()
     numberOfBeds = models.SmallIntegerField()
-    # roomType = models.CharField(max_length=20, choices=ROOM_TYPES)
     roomType = models.TextField(max_length=20,choices=ROOM_TYPES)
 
     price = models.FloatField()
     statusStartDate = models.DateField(null=True)
     statusEndDate = models.DateField(null=True)
-    address = models.CharField(max_length=20, choices=ROOM_ADDRESS)
+    address = models.CharField(max_length=50)
     hotel_name = models.CharField(max_length=20)
-    # rate = models.FloatField(default=0.0)
-    # comment = models.TextField( default='')
-    # room_include = MultiSelectField(choices=ROOM_INCLUDE,max_choices=3, max_length=20)
-    room_include = MultiSelectField( max_length=30, choices=ROOM_INCLUDE,)
+    room_include = MultiSelectField( max_length=200, choices=ROOM_INCLUDE,)
 
     #discount percent
     discount = models.FloatField(default=0.0)
 
-    # cover_image = models.ImageField(upload_to =upload_room_images, blank=False )
     images = models.ImageField(upload_to='room_images/', blank=True)
-
-    # def price_discount_percent(seft):
-
-    #     return (seft.price_discount/seft.price) * 100
     
     def discounted_price(self):
         if self.discount:
@@ -96,14 +88,6 @@ class Room(models.Model):
 
     def __str__(self):
         return str(self.number)
-    
-# class Room_image(models.Model):
-#     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-#     image = models.ImageField(upload_to='room_images/')
-#     image_url = models.CharField(max_length=255, null=True, blank=True)
-
-
-
 
 class Booking(models.Model):
     roomNumber = models.ForeignKey(Room, on_delete=models.CASCADE)
@@ -181,20 +165,46 @@ class RoomServices(models.Model):
 
     def str(self):
         return str(self.curBooking) + " " + str(self.room) + " " + str(self.servicesType)
-    
+
 class Review(models.Model):
+    RATING_CHOICES = (
+        (1, '★'),
+        (2, '★★'),
+        (3, '★★★'),
+        (4, '★★★★'),
+        (5, '★★★★★'),
+    )
     user = models.ForeignKey(Guest, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reviews')
     booking = models.ForeignKey(Booking, null=True, on_delete=models.CASCADE)
 
     subject = models.CharField(max_length = 100, null=True, blank=True)
     comment = models.TextField(max_length=250, null=True, blank=True)
-    rate = models.IntegerField(default=1)
+    # rate = models.IntegerField(default=1)
+    rate = models.IntegerField(choices=RATING_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
+    trip_date = models.DateField(default=timezone.now)
+    
+    def stars(self):
+        return '★' * self.rate + '☆' * (5 - self.rate)
 
     def __str__(self):
-        return str(self.room) + " " + str(self.comment)+ " " + str(self.user)+ " " + str(self.booking)
+        return f"{self.room} {self.comment} {self.user} {self.booking} {self.stars()}"
+    # def __str__(self):
+    #     return str(self.room) + " " + str(self.comment)+ " " + str(self.user)+ " " + str(self.booking) + " " + str(self.stars()) 
 
+class ReviewImage(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='review_images/', blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    # def save(self, *args, **kwargs):
+    #     super(ReviewImage, self).save(*args, **kwargs)
+    #     img = Image.open(self.image.path)
+    #     output_size = (800, 800)
+    #     img.thumbnail(output_size)
+    #     img.save(self.image.path)
+        
 # class Room_image(models.Model):
 #     # room=room=models.ForeignKey(Room,on_delete=models.SET_NULL,null=True,blank=True)
 #     # image=models.ImageField(null=True ,blank=True)

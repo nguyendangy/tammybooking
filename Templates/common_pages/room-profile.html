@@ -1,10 +1,99 @@
 {% load static %}
+<style>
+    .d-flex {
+        display: flex;
+        align-items: center;
+        /* căn giữa theo chiều dọc */
+    }
+
+    #review-image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    #review-image-modal-img {
+        display: block;
+        margin: auto;
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        font-size: 35px;
+        font-weight: bold;
+        color: #f1f1f1;
+        cursor: pointer;
+    }
+    /* phan trang */
+    .pagination-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-wrapper a {
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+.pagination-wrapper .current-page {
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.pagination-wrapper .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+</style>
 <div class="container">
     <div class="shadow-lg p-5">
 
-        <div class="row mt-5">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <h2>{{room.hotel_name}}</h2>
+            </div>
+            <div class="col-md-12">
+                <h2 style="font-size: 1rem; color: gray;"><i class="fas fa-map-marker-alt"></i> {{room.address}}</h2>
+            </div>
 
-            <div class="col-6">
+            <div class="col-md-6">
 
                 <div class="p-2 h4">
                     <span>Room Number:</span>
@@ -19,6 +108,16 @@
                 <div class="p-2 h4">
                     <span>Price:</span>
                     <span class="font-weight-normal">{{room.price}}</span>
+                </div>
+
+                <div class="p-2 h4">
+                    <span>Discount percent:</span>
+                    <span class="font-weight-normal">{{room.discount}}% OFF</span>
+                </div>
+
+                <div class="p-2 h4">
+                    <span>Discount Price:</span>
+                    <span class="font-weight-normal">{{room.discounted_price}}</span>
                 </div>
 
                 <div class="p-2 h4">
@@ -39,40 +138,17 @@
                 </div>
                 <div class="p-2 h4">
                     <span>Average Rating: </span>
-                    <span class="font-weight-normal"> {{ average_rating }} - ({{ review_count }} reviews)</span>
-
+                    <span class="font-weight-normal"> {{ average_rating|floatformat:1 }} - ({{ review_count }} reviews)</span>                
                 </div>
-                <div class="p-2 h4">
-                    <span>Rating List: </span>
-
-                    <div class="font-weight-normal">
-                        {% for reviews in reviewalluser %}
-                        <p>Review name: {{ reviews.user }}</p>
-                        <p>Comment: {{ reviews.comment }}</p>
-                        <p>Rating: {{ reviews.rate }}</p>
-                        <hr>
-                        {% empty %}
-                        <p>No reviews yet.</p>
-                        {% endfor %}
-                    </div>
-                    
-                </div>
-                
-                {% if role == 'guest'%} 
-                    <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Review</a>                      
-                {% endif %}
-
-                
-
             </div>
 
-            <div class="col-6">
-                {% if role == 'guest' %} 
-                
+            <div class="col-md-6">
+                {% if role == 'guest' %}
+
                 <div class="p-2 h4">
-                    <img src="{{ room.images }}" alt="" width="400"></td>
+                    <img src="{{ room.images }}" alt="" class="img-fluid" style="border-radius: 10px;">
                 </div>
-                
+
                 {% endif %}
 
 
@@ -114,48 +190,137 @@
                 </div>
                 {% endif %}
                 <br>
-                
-
 
             </div>
-        </div>
-        <br>
-        {% if role != 'guest' %}
-        <div class="table-responsive table-striped my-5">
-            <div class="table-header row">
+            <div class="col-8">
+                <div class="p-2 h4 border p-3 mt-3" style="border-radius: 10px;">
+                    <div class="row">
+                        <div class="col-md-6 d-flex">
+                            <span>Rating: </span>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            {% if role == 'guest'%} 
+                            <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>                      
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="font-weight-normal">
+                    {% for review in reviews %}
+                    <div class="font-weight-normal border p-3 mt-3" style="border-radius: 10px;">
+                    <strong><p >{{ review.user }}</strong> wrote a review {{ review.created_at|date:"d/m/Y" }}</p>
+                    
+                    
+                    <div>
+                        <p>
+                         {% for i in "12345" %}
+                            {% if i <= review.rate|stringformat:"i" %} &#9733; {% else %} &#9734; {% endif %}
+                        {% endfor %}
+                        </p>
+                    </div>
+                    <p>{{ review.subject }}</p>
+                    <p>{{ review.comment }}</p>
+                    <p><strong>Date of stay:</strong> {{ review.trip_date }}</p>
+                    <div class="row">
+                        {% for image in review.images.all|slice:":5" %}
+                        <div class="col-4 mb-3">
+                                <img src="{{ image.image }}" alt="{{ image.image.name }}" class="img-fluid review-image-thumb" style="height:100px;width:100px;" onclick="showImageModal('{{ image.image }}')">
+                            
+                        </div>
+                        
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        {% for image in review.images.all|slice:":5" %}
+                            <div id="imageModal" class="modal">
 
-                <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
-                    <h5>This room has these reservations</h5>
+                                <span class="close" onclick="closeImageModal()" >&times;</span>
+                                <img src="{{ image.image }}" alt="{{ image.image.name }}" class="img-fluid  modal-content" id="modalImage"  onclick="showImageModal('{{ image.image }}')">
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="reviewImageModal" class="modal">
+                        <span class="close">&times;</span>
+                        <img class="modal-content" id="reviewImage">
+                    </div>
+                    </div>
+                    {% empty %}
+                    <p>No review yet.</p>
+                    {% endfor %}
+
+                    <div class="pagination-wrapper">
+                        <span class="step-links">
+                            {% if reviews.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ reviews.previous_page_number }}">previous</a>
+                            {% endif %}
+                
+                            <span class="current-page">
+                                Page {{ reviews.number }} of {{ reviews.paginator.num_pages }}.
+                            </span>
+                
+                            {% if reviews.has_next %}
+                                <a href="?page={{ reviews.next_page_number }}">next</a>
+                                <a href="?page={{ reviews.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                </div>
+            </div>
+            <br>
+            {% if role != 'guest' %}
+            <div class="table-responsive table-striped my-5">
+                <div class="table-header row">
+
+                    <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
+                        <h5>This room has these reservations</h5>
+                    </div>
+
                 </div>
 
+                <table class="table table-hover table-striped">
+                    <thead class="bg-secondary rounded">
+                        <tr>
+                            {% if role != 'guest' %} <th>Guest Name</th> {% endif %}
+                            <th>From </th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for bo in bookings %}
+                        <tr>
+                            {% if role != 'guest' %} <td><a href="{% url 'guest-profile' bo.guest.user.id %}">
+                                    {{bo.guest.user.first_name}}
+                                    {{bo.guest.user.last_name}}</a></td>
+                            {%endif %}
+                            <td>{{bo.startDate}}</td>
+                            <td>{{bo.endDate}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
             </div>
-
-            <table class="table table-hover table-striped">
-                <thead class="bg-secondary rounded">
-                    <tr>
-                        {% if role != 'guest' %} <th>Guest Name</th> {% endif %}
-                        <th>From </th>
-                        <th>To</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for bo in bookings %}
-                    <tr>
-                        {% if role != 'guest' %} <td><a href="{% url 'guest-profile' bo.guest.user.id %}">
-                                {{bo.guest.user.first_name}}
-                                {{bo.guest.user.last_name}}</a></td>
-                        {%endif %}
-                        <td>{{bo.startDate}}</td>
-                        <td>{{bo.endDate}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
+            {% endif %}
 
         </div>
-        {% endif %}
-
     </div>
-</div>
+
+    <script>
+        function showImageModal(imageUrl) {
+            var modal = document.getElementById("imageModal");
+            var modalImage = document.getElementById("modalImage");
+            modal.style.display = "block";
+            modalImage.src = imageUrl;
+        }
+
+        function closeImageModal() {
+            var modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+    </script>

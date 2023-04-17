@@ -1,15 +1,31 @@
 {% load static %}
-<div class="container">
+<style> 
+#review-form label {
+  font-size: 20px;
+}
+</style>
+<div class="container" >
     <div class="shadow-lg p-5">
 
-        <div class="row mt-5">
-            <div class="col-12">
-                <h1>{% if form.instance.pk %}Edit{% else %}Add{% endif %} review for room number {{ rooms.number }}</h1>
-                <form method="POST" action="{% url 'room-review' pk=rooms %}">
+        <div class="row mt-3 ">
+            <div class="col-4">
+                <h1 class="text-center mb-4">  Let us know what you think about this stay?
+                </h1>
+                <img src="{{ rooms.images }}" alt="" class="img-fluid" style="border-radius: 10px;">
+                <div style="font-size: 22px"><strong>{{rooms.hotel_name}}</strong></div>
+                <div style="font-size: 1rem; color: gray;"><i class="fas fa-map-marker-alt"></i> {{rooms.address}}</div>
+                
+            </div>
+            <div class="col-8" id="review-form">
+                <form method="POST" action="{% url 'room-review' pk=rooms %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <div id="rate"></div>
-                    <input type="submit" value="Submit" name="ratings" class="btn btn-primary">
+                    <div class="form-group">
+                      {{ form.as_p }}
+                    </div>
+                    <div class="form-group text-center">
+                      <input type="submit" value="Submit Review" name="ratings" class="btn btn-primary btn-lg px-5">
+                    </div>
+          
                 </form>
             </div>
         </div>
@@ -18,14 +34,4 @@
     </div>
 </div>
 
-{% block extra_js %}
-  <script>
-    $(function() {
-      $('#rate').raty({
-        path: '//cdn.jsdelivr.net/jquery.raty/2.7.0/img/',
-        scoreName: 'rate',
-      });
-    });
-  </script>
-{% endblock %}
 

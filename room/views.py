@@ -1,6 +1,9 @@
 # imports
+from django.core.paginator import Paginator
 import os
 from PIL import Image
+from django.http import HttpResponse
+import io
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -257,6 +260,15 @@ def room_profile(request, pk):
     review = Review.objects.filter(room=tempRoom,user=curGuest,booking=bookings3)
     review_all_user_in_room = Review.objects.filter(room=tempRoom)
     guests = Guest.objects.all()
+
+    # Create a Paginator object
+    review_list = review_all_user_in_room.all().order_by('-created_at')
+
+    paginator = Paginator(review_list, 2) # Show 10 reviews per page
+
+    page_number = request.GET.get('page')
+    reviews = paginator.get_page(page_number)
+
     context = {
         "is_reviewed": is_reviewed,
         "role": role,
@@ -265,6 +277,7 @@ def room_profile(request, pk):
         "guests": guests,
         "bookings3": bookings3,
         "review":review,
+        "reviews": reviews,
         "reviewalluser":review_all_user_in_room,
         'average_rating': tempRoom.averagereview(),
         'review_count': tempRoom.countreview(),
@@ -324,12 +337,53 @@ def room_review(request, pk):
             form = RatingForm(request.POST or None)
             if form.is_valid():
                 new_review = form.save()
-                new_review.room = rooms
-                new_review.user = curGuest
-                if review:
-                    review.delete()  # delete previous review
-                new_review.save()
+
+                
+                if 'images' in request.FILES:
+                    images = []
+
+                    # image = request.FILES['images']
+                    for image in request.FILES.getlist('images'):
+                        fs = FileSystemStorage()
+                        filename = fs.save(image.name, image)
+                        filepath = fs.path(filename)
+                        # Resize image if necessary
+                        img = Image.open(filepath)    
+                        if img.height > 1000 or img.width > 1000:
+                            img.thumbnail((1000, 1000))
+                            img.save(filepath)
+                        # Set URL of image file in Room model
+
+                        # new_review.images = fs.url(filename)
+                        # new_review.images.create(image=fs.url(filename))
+
+                        # Append URL of image file to images list
+                        images.append(fs.url(filename))
+                    new_review.room = rooms
+                    new_review.user = curGuest
+                    if review:
+                        review.delete()  # delete previous review
+                    new_review.save()
+                    for image_url in images:
+                        ReviewImage.objects.create(review=new_review, image=image_url)
+                else:
+
+                    images = None
+                    new_review.room = rooms
+                    new_review.user = curGuest
+                    if review:
+                        review.delete()  # delete previous review
+                    new_review.save()  
+                
+                # Lưu trữ các ảnh được tải lên
+                # for image in request.FILES.getlist('images'):
+                #     new_review.images.create(image=image)
+
+               
+                # Create ReviewImage objects for each image
+                
                 return redirect('room-profile',pk=rooms.number)
+
     else:
         form = RatingForm(instance=review)
     context = {

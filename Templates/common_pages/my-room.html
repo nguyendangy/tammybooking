@@ -15,7 +15,7 @@
                 <!-- <form action="" method="POST"> -->
                     {% csrf_token %}
                     <th>Room Images</th>
-                    <th>Room Number</th>
+                    <th>Hotel Name</th>
                     <th>Guest Name</th>
                     <th>Date Of dateOfReservation</th>
                     <th>Start Day</th>
@@ -33,7 +33,7 @@
             <tr>{% load static %}
                 <!-- <td><img src="/media/images/photo/{{ b.roomNumber.images }}" width="20"></td> -->
                 <td><img src="{% static 'images/ha-noi.jpg' %}" width="100"></td>
-                <td><a href="{% url 'room-profile' b.roomNumber.number %}">{{b.roomNumber.number}}</a></td>
+                <td><a href="{% url 'room-profile' b.roomNumber.number %}">{{b.roomNumber.hotel_name}}</a></td>
                 <td><a href="{% url 'guest-profile' b.guest.user.id %}">{{b.guest.user.first_name}}</a></td>
                 <td>{{ b.dateOfReservation }}</td>
                 <td>{{ b.startDate }}</td>
