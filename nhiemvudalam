@@ -1,0 +1,15 @@
+Báo cáo tốt nghiệp
+sửa lại các nội dung sau:
+Tên đề tài:nghiên cứu xây dựng website review khách sạn, homestay tỉnh Quảng Bình
+ngày 23/4/2023
+- [x] ảnh tải lên mình phải chỉnh 1 kích thước để hiển thị trang chủ cho đẹp
+- [x] đã sửa xong ảnh ở trang chủ, cần đổi kích thước 600* 600 trước khi đăng lên, hoặc kích thước vuông, là ok, hiển thị ảnh ở book lít, và rôm ok. 
+- [x] cần sửa phần hiển thị nút review khi đã đặt phòng. và ngược lại
+- [x] sửa ảnh của hotel book(Sửa book room ở nav) ảnh ở book list, và trong review
+- [x] sửa báo cáo lại cho giống với báo cáo thực tập, phần 1, mục tiêu, phương pháp…Nội dung của phần 1 lý do chọn đề tài, 
+- [x] sửa thống kê theo tháng, năm các phòng đã đặt
+- [x] Thêm lọc danh sách chỗ nghỉ theo huyện, xoá 3 trường đầu tiên gồm 
+Room Number	Capacity	Number of Beds
+- [x] 	K view được phòng trong rôm phần admin
+- [x] Thay bằng các room_area,  tiện ích(room_include), chọn huyện(district), ưu điểm Nearby Places : về vị trí, gần biển gần địa điểm du lịch, gần trung tâm thành phố, trung tâm huyện, gần chợ,…
+- [x] Sau khi Nhân filter nó mới hiển thị tiền ở phần rôm services

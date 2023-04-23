@@ -4,6 +4,8 @@ import os
 from PIL import Image
 from django.http import HttpResponse
 import io
+from django.db.models import Sum
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -74,39 +76,55 @@ def rooms(request):
             rooms = chech_availability(firstDay, lastDate)
 
         if "filter" in request.POST:
-            if (request.POST.get("number") != ""):
-                rooms = rooms.filter(
-                    number__contains=request.POST.get("number"))
+            # if (request.POST.get("number") != ""):
+            #     rooms = rooms.filter(
+            #         number__contains=request.POST.get("number"))
 
-            if (request.POST.get("capacity") != ""):
-                rooms = rooms.filter(
-                    capacity__gte=request.POST.get("capacity"))
+            # if (request.POST.get("capacity") != ""):
+            #     rooms = rooms.filter(
+            #         capacity__gte=request.POST.get("capacity"))
 
-            if (request.POST.get("nob") != ""):
+            # if (request.POST.get("nob") != ""):
+            #     rooms = rooms.filter(
+            #         numberOfBeds__gte=request.POST.get("nob"))
+            if (request.POST.get("room_area") != ""):
                 rooms = rooms.filter(
-                    numberOfBeds__gte=request.POST.get("nob"))
-
+                    room_area__contains=request.POST.get("room_area"))
+                
+            if (request.POST.get("room_include") != ""):
+                rooms = rooms.filter(
+                    room_include__contains=request.POST.get("room_include"))
+                
             if (request.POST.get("type") != ""):
                 rooms = rooms.filter(
                     roomType__contains=request.POST.get("type"))
-
-            if (request.POST.get("price") != ""):
-                rooms = rooms.filter(
-                    price__lte=request.POST.get("price"))
-
+                
             if (request.POST.get("address") != ""):
                 rooms = rooms.filter(
                     address__contains=request.POST.get("address"))
+                
+            if (request.POST.get("district") != ""):
+                rooms = rooms.filter(
+                    district__contains=request.POST.get("district"))
+
+            if (request.POST.get("nearby_places") != ""):
+                rooms = rooms.filter(
+                    nearby_places__contains=request.POST.get("nearby_places"))
+
+            if (request.POST.get("price") != ""):
+                rooms = rooms.filter(
+                    price__contains=request.POST.get("price"))
 
             context = {
                 "role": role,
                 "rooms": rooms,
-                "number": request.POST.get("number"),
-                "capacity": request.POST.get("capacity"),
-                "nob": request.POST.get("nob"),
-                "price": request.POST.get("price"),
+                "room_area": request.POST.get("room_area"),
+                "room_include": request.POST.get("room_include"),
                 "type": request.POST.get("type"),
-                "address": request.POST.get("address")
+                "address": request.POST.get("address"),
+                "district": request.POST.get("district"),
+                "nearby_places": request.POST.get("nearby_places"),
+                "price": request.POST.get("price")
             }
             return render(request, path + "rooms.html", context)
 
@@ -248,16 +266,7 @@ def room_profile(request, pk):
     user = request.user
     print("pk: ", pk)
     tempRoom = Room.objects.get(number=pk)
-    curGuest = Guest.objects.get(user=request.user)
-
     bookings = Booking.objects.filter(roomNumber=tempRoom)
-    bookings3 = Booking.objects.filter(roomNumber=tempRoom,guest=curGuest)
-    print("bookings3:", bookings3)
-    if (bookings3):
-        is_reviewed = True
-    else: 
-        is_reviewed = False
-    review = Review.objects.filter(room=tempRoom,user=curGuest,booking=bookings3)
     review_all_user_in_room = Review.objects.filter(room=tempRoom)
     guests = Guest.objects.all()
 
@@ -269,14 +278,35 @@ def room_profile(request, pk):
     page_number = request.GET.get('page')
     reviews = paginator.get_page(page_number)
 
-    context = {
-        "is_reviewed": is_reviewed,
+    if role == 'guest':
+        curGuest = Guest.objects.get(user=request.user)
+        bookings3 = Booking.objects.filter(roomNumber=tempRoom,guest=curGuest)
+        review = Review.objects.filter(room=tempRoom,user=curGuest,booking=bookings3)
+        context = {
         "role": role,
         "bookings": bookings,
         "room": tempRoom,
         "guests": guests,
         "bookings3": bookings3,
         "review":review,
+        "reviews": reviews,
+        "reviewalluser":review_all_user_in_room,
+        'average_rating': tempRoom.averagereview(),
+        'review_count': tempRoom.countreview(),
+        # "form": form
+        }
+        return render(request, path + "room-profile.html", context)
+
+    elif role == 'manager' or role == 'admin' or role == 'receptionist':
+        curGuest = Employee.objects.get(user=request.user)
+
+    
+
+    context = {
+        "role": role,
+        "bookings": bookings,
+        "room": tempRoom,
+        "guests": guests,
         "reviews": reviews,
         "reviewalluser":review_all_user_in_room,
         'average_rating': tempRoom.averagereview(),
@@ -457,9 +487,69 @@ def room_services(request):
     path = role + "/"
 
     room_services = RoomServices.objects.all()
+    total_price = room_services.aggregate(Sum('price'))['price__sum']
+    if request.method == "POST":
+        if "filter" in request.POST:
+            if (request.POST.get("hotel_name") != ""):
+                rooms = Room.objects.filter(
+                    hotel_name__contains=request.POST.get("hotel_name"))
+                room_services = room_services.filter(
+                    room__in=rooms)
+                # num_rooms = rooms.count()
+
+            if (request.POST.get("name") != ""):
+                users = User.objects.filter(
+                    Q(first_name__contains=request.POST.get("name")) | Q(last_name__contains=request.POST.get("name")))
+                guests = Guest.objects.filter(user__in=users)
+                room_services = room_services.filter(
+                    curBooking__in=guests)
+
+            if (request.POST.get("type") != ""):
+                room_services = room_services.filter(
+                    servicesType=request.POST.get("type"))
+
+            if (request.POST.get("credate") != ""):
+                room_services = room_services.filter(
+                    createdDate=request.POST.get("credate"))
+            
+            if (request.POST.get("price") != ""):
+                room_services = room_services.filter(
+                    price=request.POST.get("price"))
+                
+            if (request.POST.get("month") != ""):
+                room_services = room_services.filter(
+                    createdDate__month=request.POST.get("month"))
+                
+            if (request.POST.get("year") != ""):
+                room_services = room_services.filter(
+                    createdDate__year=request.POST.get("year"))
+                
+            num_services = room_services.count()
+            total_price = room_services.aggregate(Sum('price'))['price__sum']
+
+
+
+            context = {
+                "role": role,
+                'room_services': room_services,
+                "name": request.POST.get("name"),
+                "hotel_name": request.POST.get("hotel_name"),
+                "type": request.POST.get("type"),
+                "credate": request.POST.get("credate"),
+                "price": request.POST.get("price"),
+                "month": request.POST.get("month"),
+                "year": request.POST.get("year"),
+                'num_services': num_services,
+                'total_price' : total_price
+
+            }
+
+            return render(request, path + "room-services.html", context)
+
     context = {
         "role": role,
-        "room_services": room_services
+        "room_services": room_services,
+        'total_price' : total_price
     }
     return render(request, path + "room-services.html", context)
 
@@ -583,7 +673,9 @@ def bookings(request):
 
     bookings = Booking.objects.all()
     # calculating total for every booking:
+    num_rooms = bookings.count()
     totals = {}  # <booking : total>
+    total_amount = 0
     for booking in bookings:
         start_date = datetime.datetime.strptime(
             str(booking.startDate), "%Y-%m-%d")
@@ -597,14 +689,16 @@ def bookings(request):
         else:
             total = room.price * numberOfDays
         totals[booking] = total
+        total_amount += total
 
     if request.method == "POST":
         if "filter" in request.POST:
-            if (request.POST.get("number") != ""):
+            if (request.POST.get("hotel_name") != ""):
                 rooms = Room.objects.filter(
-                    number__contains=request.POST.get("number"))
+                    hotel_name__contains=request.POST.get("hotel_name"))
                 bookings = bookings.filter(
                     roomNumber__in=rooms)
+                # num_rooms = rooms.count()
 
             if (request.POST.get("name") != ""):
                 users = User.objects.filter(
@@ -624,16 +718,46 @@ def bookings(request):
             if (request.POST.get("ed") != ""):
                 bookings = bookings.filter(
                     endDate__lte=request.POST.get("ed"))
+            
+            if (request.POST.get("month") != ""):
+                bookings = bookings.filter(
+                    startDate__month=request.POST.get("month"))
+                
+            if (request.POST.get("year") != ""):
+                bookings = bookings.filter(
+                    startDate__year=request.POST.get("year"))
+            num_rooms = bookings.count()
+            totals = {}  # <booking : total>
+            total_amount = 0
+            for booking in bookings:
+                start_date = datetime.datetime.strptime(
+                    str(booking.startDate), "%Y-%m-%d")
+                end_date = datetime.datetime.strptime(str(booking.endDate), "%Y-%m-%d")
+                numberOfDays = abs((end_date-start_date).days)
+                # get room peice:
+                room = Room.objects.get(number=booking.roomNumber.number)
+                discounted_price = (room.price  * (100 - room.discount) / 100)
+                if room.discount:
+                    total = discounted_price * numberOfDays
+                else:
+                    total = room.price * numberOfDays
+                totals[booking] = total
+                total_amount += total
+
 
             context = {
                 "role": role,
                 'bookings': bookings,
                 'totals': totals,
                 "name": request.POST.get("name"),
-                "number": request.POST.get("number"),
+                "hotel_name": request.POST.get("hotel_name"),
                 "rez": request.POST.get("rez"),
                 "fd": request.POST.get("fd"),
-                "ed": request.POST.get("ed")
+                "ed": request.POST.get("ed"),
+                "month": request.POST.get("month"),
+                "year": request.POST.get("year"),
+                'total_amount': total_amount,
+                'num_rooms': num_rooms,
             }
 
             return render(request, path + "bookings.html", context)
@@ -641,7 +765,9 @@ def bookings(request):
     context = {
         "role": role,
         'bookings': bookings,
-        'totals': totals
+        'total_amount': total_amount,
+        'num_rooms': num_rooms,
+        'totals': totals,
     }
     return render(request, path + "bookings.html", context)
 

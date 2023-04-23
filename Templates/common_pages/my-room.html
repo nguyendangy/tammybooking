@@ -1,4 +1,12 @@
-
+<style>
+    img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+  background-size: contain;
+}
+</style>
 <div class="container py-4">
     
     <div class="table-header row">
@@ -32,7 +40,7 @@
             {% if b.guest.user.id == request.user.id %}
             <tr>{% load static %}
                 <!-- <td><img src="/media/images/photo/{{ b.roomNumber.images }}" width="20"></td> -->
-                <td><img src="{% static 'images/ha-noi.jpg' %}" width="100"></td>
+                <td><img src="{{  b.roomNumber.images }}" width="100"  height="100"></td>
                 <td><a href="{% url 'room-profile' b.roomNumber.number %}">{{b.roomNumber.hotel_name}}</a></td>
                 <td><a href="{% url 'guest-profile' b.guest.user.id %}">{{b.guest.user.first_name}}</a></td>
                 <td>{{ b.dateOfReservation }}</td>

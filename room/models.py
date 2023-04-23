@@ -37,6 +37,10 @@ class Room(models.Model):
         ('Room service','Room service'),
         ('Private Bathroom','Private Bathroom'),
     )
+    DISTRICT = (
+        ('Dong Hoi City ','Dong Hoi City'),
+        ('Bo Trach District ','Bo Trach District'),
+    )
     
     number = models.IntegerField(primary_key=True)
     capacity = models.SmallIntegerField()
@@ -46,10 +50,12 @@ class Room(models.Model):
     price = models.FloatField()
     statusStartDate = models.DateField(null=True)
     statusEndDate = models.DateField(null=True)
-    address = models.CharField(max_length=50)
-    hotel_name = models.CharField(max_length=20)
+    address = models.CharField(max_length=100)
+    hotel_name = models.CharField(max_length=50)
     room_include = MultiSelectField( max_length=200, choices=ROOM_INCLUDE,)
-
+    district = models.TextField( max_length=22, choices=DISTRICT,default="")
+    nearby_places =  models.CharField( max_length=200,default="")
+    room_area = models.CharField( max_length=15,default="")
     #discount percent
     discount = models.FloatField(default=0.0)
 

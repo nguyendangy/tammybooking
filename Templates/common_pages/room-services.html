@@ -5,7 +5,6 @@
 
             <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
                 <h2>Room Services</h2>
-                <span class="text-muted">The list include last 1 month room services</span>
             </div>
 
         </div>
@@ -14,12 +13,14 @@
                 <tr>
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <th>Guest Name<input type="text" class="form-control border border-secondary"></th>
-                        <th>Room Number<input type="text" class="form-control border border-secondary"></th>
-                        <th>Type<input type="text" class="form-control border border-secondary"></th>
-                        <th>Created Date<input type="date" class="form-control border border-secondary"></th>
-                        <th>Price<input type="text" class="form-control border border-secondary"></th>
-                        <th><button type="submit" class="btn btn-warning">Filter</button></th>
+                        <th>Guest Name<input type="text" name="name" value="{{name}}" class="form-control border border-secondary"></th>
+                        <th>Hotel Name<input type="text" value="{{hotel_name}}" name="hotel_name"class="form-control border border-secondary"></th>
+                        <th>Type<input type="text" name="type" value="{{type}}" class="form-control border border-secondary"></th>
+                        <th>Created Date<input type="date" name="credate" value="{{credate}}"class="form-control border border-secondary"></th>
+                        <th>Price<input type="text" name="price" value="{{price}}" class="form-control border border-secondary"></th>
+                        <th>Month<input type="month" name="month" value="{{month}}" class="form-control border border-secondary"></th>
+                        <th>Year<input type="year" name="year" value="{{year}}" style="width:70px;" class="form-control border border-secondary"></th>
+                        <th><button type="submit" name="filter" class="btn btn-warning">Filter</button></th>
                     </form>
                 </tr>
             </thead>
@@ -29,14 +30,25 @@
                     <td><a
                             href="{% url 'guest-profile' rs.curBooking.guest.user.id %}">{{rs.curBooking.guest.user.first_name}}</a>
                     </td>
-                    <td><a href="{% url 'room-profile' rs.room.number }">{{rs.room.number}}</a></td>
+                    <td><a href="{% url 'room-profile' rs.room.hotel_name }">{{rs.room.hotel_name}}</a></td>
                     <td>{{rs.servicesType}}</td>
                     <td>{{rs.createdDate}}</td>
                     <td>{{rs.price}}</td>
+                    <td>{{ rs.createdDate.month }}</td>
+                    <td>{{ rs.createdDate.year }}</td>
                     <td> <a href="" class="btn btn-sm btn-danger px-3">Delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>Total number of services: {{room_services.count}}</p>
+                </div>
+                <div class="col-md-6">
+                    <p>Total price of services: {{total_price}}$</p>
+                </div>
+            </div>
+    
 
         </table>
 

@@ -200,7 +200,9 @@
                         </div>
                         <div class="col-md-6 text-right">
                             {% if role == 'guest'%} 
-                            <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>                      
+                                {% if bookings3 %} 
+                                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>                      
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

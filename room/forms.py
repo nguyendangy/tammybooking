@@ -52,15 +52,15 @@ class RatingForm(forms.ModelForm):
 class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
-        fields = ['hotel_name', 'number', 'address',  'room_include', 'images',
-                  'capacity', 'numberOfBeds', 'roomType', 'price', 'discount']
+        fields = ['hotel_name', 'room_area',  'room_include', 'roomType', 'address', 'district', 'nearby_places', 'images',
+                  'capacity', 'numberOfBeds', 'price', 'discount']
 
 
 class editRoom(ModelForm):
     class Meta:
         model = Room
-        fields = ['hotel_name', 'number', 'address',  'room_include', 'images',
-                  'capacity', 'numberOfBeds', 'roomType', 'price', 'discount']
+        fields = ['hotel_name', 'room_area',  'room_include', 'roomType', 'address', 'district', 'nearby_places', 'images',
+                  'capacity', 'numberOfBeds', 'price', 'discount']
 
 
 class editBooking(ModelForm):

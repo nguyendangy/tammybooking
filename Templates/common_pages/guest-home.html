@@ -75,6 +75,8 @@
       font-size: 1.2em;
       margin-bottom: 0.5em;
    }
+
+ 
 </style>
 <div class="main-page">
 
@@ -121,7 +123,7 @@
             <div class="room-card left-margin">
                <h3><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a></h3>
 
-               <img src="{{ room.images }}" alt="{{ room.name }}">
+               <p><img src="{{ room.images }}"  style="object-fit: contain;"></p>
                <p>Room number: {{ room.number }}</p>
                <p>General price: ${{ room.price }}</p>
                {% if room.discount %}
