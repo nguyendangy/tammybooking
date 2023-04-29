@@ -42,7 +42,7 @@ class Room(models.Model):
         ('Bo Trach District ','Bo Trach District'),
     )
     
-    number = models.IntegerField(primary_key=True)
+    number = models.AutoField(primary_key=True)
     capacity = models.SmallIntegerField()
     numberOfBeds = models.SmallIntegerField()
     roomType = models.TextField(max_length=20,choices=ROOM_TYPES)
@@ -102,6 +102,7 @@ class Booking(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     has_reviewed = models.BooleanField(default=False)
+    # is_cancelled = models.BooleanField(default=False)
 
     def numOfDep(self):
         return Dependees.objects.filter(booking=self).count()
@@ -136,7 +137,14 @@ class Booking(models.Model):
     def __str__(self):
         return str(self.roomNumber) + " " + str(self.guest)
 
+# class Cancellation(models.Model):
+#     guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
+#     reservation = models.ForeignKey(Booking, on_delete=models.CASCADE)
+#     reason = models.TextField()
 
+#     def __str__(self):
+#         return f"Cancellation for {self.reservation}"
+    
 class Dependees(models.Model):
     booking = models.ForeignKey(Booking,   null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)

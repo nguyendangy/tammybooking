@@ -13,3 +13,4 @@ Room Number	Capacity	Number of Beds
 - [x] 	K view được phòng trong rôm phần admin
 - [x] Thay bằng các room_area,  tiện ích(room_include), chọn huyện(district), ưu điểm Nearby Places : về vị trí, gần biển gần địa điểm du lịch, gần trung tâm thành phố, trung tâm huyện, gần chợ,…
 - [x] Sau khi Nhân filter nó mới hiển thị tiền ở phần rôm services
+ngày 28/4/2023 thêm chức năng huỷ đặt phòng

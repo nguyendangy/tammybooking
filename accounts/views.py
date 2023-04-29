@@ -401,7 +401,9 @@ def guest_profile(request, pk):
         "role": role,
         "guest": guest,
         "eventAttendees": eventAttendees,
-        "bookings": bookings
+        "bookings": bookings,
+        'now': datetime.now().date,
+
     }
     return render(request, path + "guest-profile.html", context)
 

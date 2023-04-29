@@ -120,29 +120,34 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th>Nameplate</th>
                             <th>Reservation Date</th>
                             <th>Check in Date</th>
                             <th>Check out Date</th>
-                            <th>Number of residents</th>
+                            <th>Book Cancel</th>
+                            
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for bo in bookings %}
                         <tr>
+                            <td>{{bo.roomNumber.hotel_name}}</td>
                             <td>{{bo.dateOfReservation}}</td>
                             <td>{{bo.startDate}}</td>
                             <td>{{bo.endDate}}</td>
-                            <td>{{bo.numOfResidents}}</td>
-
                             {% if role == "guest"%}
+                            
                             <form action="{% url 'request-refund' %}" method="POST">
                                 {% csrf_token %}
-                                <input type="hidden" value="{{bo.id}}" name="bookingId">
-                                <td><button type="submit" class="btn btn-outline-success btn-lg " name="refReq">Send
-                                        Refund Request</button></td>
+                                <input type="hidden" value="{{ bo.id }}" name="bookingId">
+                                {% if bo.startDate > now %}
+                                <td><button type="submit" class="btn btn-outline-success btn-lg" name="refReq">Send ReCancellation Request</button></td>
+                                {% else %}
+                                <td><span class="text-danger"> Cancellation not possible after start date.</span></td>
                             </form>
                             {% endif %}
+                                {% endif %}
                         </tr>
                         {% endfor %}
 

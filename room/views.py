@@ -225,7 +225,11 @@ def my_room(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
     rooms = Room.objects.all()
-    bookings = Booking.objects.all()
+
+    guest = Guest.objects.get(user=request.user)
+    bookings = Booking.objects.filter(guest=guest)
+    # Get messages
+    messages_list = messages.get_messages(request)
     # calculating total for every booking:
     totals = {}  # <booking : total>
     for booking in bookings:
@@ -246,7 +250,10 @@ def my_room(request):
         "role": role,
         'bookings': bookings,
         'rooms': rooms,
-        'totals': totals
+        'totals': totals,
+        'guest': guest,
+        'now': datetime.datetime.now().date,
+        "messages": messages_list,
     }
     return render(request, path + "my-room.html", context)
 
@@ -487,7 +494,7 @@ def room_services(request):
     path = role + "/"
 
     room_services = RoomServices.objects.all()
-    total_price = room_services.aggregate(Sum('price'))['price__sum']
+
     if request.method == "POST":
         if "filter" in request.POST:
             if (request.POST.get("hotel_name") != ""):
@@ -548,8 +555,7 @@ def room_services(request):
 
     context = {
         "role": role,
-        "room_services": room_services,
-        'total_price' : total_price
+        "room_services": room_services
     }
     return render(request, path + "room-services.html", context)
 
@@ -859,7 +865,7 @@ def deleteBooking(request, pk):
     return render(request, path + "deleteBooking.html", context)
 
 
-@ login_required(login_url='login')
+@login_required(login_url='login')
 def refunds(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
@@ -877,6 +883,8 @@ def refunds(request):
 
             tempUser = User.objects.get(id=guestUserId)
             receiver = Guest.objects.get(user=tempUser)
+            refund = Refund.objects.get(id=refundId)
+            booking = Booking.objects.get(id=refund.reservation.id)
 
             def send(request, receiver, text, subject):
 
@@ -894,9 +902,6 @@ def refunds(request):
                     # user.email
                 )
 
-                messages.success(
-                    request, 'Feedback E-Mail Was Successfully Sent')
-
                 Refund.objects.filter(id=refundId).delete()
                 return render(request, path + "refunds.html", context)
 
@@ -904,7 +909,7 @@ def refunds(request):
                 subject = "Refund"
                 text = """
                     Dear {guestName},
-                    We are pleased to confirm that your refund request has been accepted.
+                    We are pleased to confirm that your cancellation request has been accepted.
                     The amount of refund will be on your account in 24 hours.
                     This time interval can change up to 48 hours according to your bank.
                     We are very sorry for this inconvenience. We hope to see you soon.
@@ -918,7 +923,7 @@ def refunds(request):
                 subject = "Refund"
                 text = """
                     Dear {guestName},
-                    We are sorry to inform you that your refund request has been declined.
+                    We are sorry to inform you that your cancellation request has been declined.
                     After our examinations, we see that your request can not be done according to our Hotel Policy.
                     We are very sorry for this inconvenience. We hope to see you soon.
                 """
@@ -929,8 +934,14 @@ def refunds(request):
 
             if "decline" in request.POST:
                 send_mail_refund_declined(request, receiver)
+                messages.success(
+                    request, 'Feedback email was successfully sent.')
             if "approve" in request.POST:
                 send_mail_refund_approved(request, receiver)
+                booking.delete()
+                messages.success(
+                    request, 'Feedback email was successfully sent, and this booking has been deleted.')
+
 
             refundId = None
             statu = None
@@ -981,22 +992,28 @@ def request_refund(request):
         if "sendReq" in request.POST:
             reason = request.POST.get("reqExp")
             curBookingId = request.POST.get("bid")
+            print("curBookingId",curBookingId)
             currentBooking = Booking.objects.get(id=curBookingId)
+            print("currentBooking",currentBooking)
+
             temp = Refund.objects.filter(reservation=currentBooking)
+            print("temp",temp)
+
             if not temp:
                 currentReq = Refund(
                     guest=curGuest, reservation=currentBooking, reason=reason)
                 currentReq.save()
                 messages.success(
                     request, "Your request was successfully sent.")
+                return redirect('my-room')
             else:
-                messages.error(
-                    request, "We already have your refund request for this reservation!")
-
+                messages.warning(
+                    request, "You have already sent a cancellation request for this booking.")
+                return redirect('my-room')
     context = {
         "role": role,
         "curGuest": curGuest,
-        "id": request.POST.get("bookingId")
+        "id": request.POST.get("bookingsId")
     }
 
     return render(request, path + "request-refund.html", context)
