@@ -6,6 +6,11 @@
   width: 150px;
   background-size: contain;
 }
+td {
+        text-align: center;
+        vertical-align: middle!important;
+      }
+
 </style>
 <div class="container py-5 clearfix">
     <div id="messages">
@@ -25,7 +30,7 @@
     <div class="table-header row mt-3 clearfix">
 
         <div class="col-sm-12 col-md-12 col-lg-6 mb-4">
-            <h2>Hotel List</h2>
+            <h2>Accommodation List</h2>
             <span class="text-muted">Filter available room with time interval</span>
         </div>
 
@@ -58,22 +63,20 @@
 
             </form>
         </div>
-
-
     </div>
 
     <table class="table table-hover table-striped">
         <thead class="bg-secondary rounded">
             <tr>
-                <form action="" method="POST">
+                <form action="" method="POST" id="roomFilterForm">
                     {% csrf_token %}
-                    <th>Images</th>
-
-                    <th>Room Area<input type="number" name="room_area" value="{{room_area}}"
+                    <th>Name<input type="text" name="hotel_name" value="{{hotel_name}}"
                         class="form-control border border-secondary"></th>
-                    <th>Room Facilities<input type="text" name="room_include" value="{{room_include}}"
+                    <th>Area(m2)<input type="number" name="room_area" value="{{room_area}}"
                         class="form-control border border-secondary"></th>
-                    <th>Room Type<input type="text" name="type" value="{{type}}"
+                    <th>Facilities<input type="text" name="room_include" value="{{room_include}}"
+                        class="form-control border border-secondary"></th>
+                    <th>Type<input type="text" name="type" value="{{type}}"
                         class="form-control border border-secondary"></th>
                     <th>Address <input type="text" name="address" value="{{address}}"
                         class="form-control border border-secondary"></th>
@@ -94,9 +97,12 @@
                     <th>Price <input type="number" step="0.01" name="price" value="{{price}}"
                             class="form-control border border-secondary"></th>
                     
-                    <th colspan="2"><button type="submit" name="filter" class="btn btn-warning w-100"
-                            id="filter">Filter</button>
+                    <th><button type="submit" name="filter" class="btn btn-warning"
+                            id="filter" style="margin-bottom: 5px;">Filter</button>
+                            <button type="button" onclick="clearAllInputsAndSubmit()" class="btn btn-danger">Clear</button>
+
                     </th>
+                    
                 </form>
 
             </tr>
@@ -107,17 +113,13 @@
             {% for room in rooms %}
             <tr>
                 {% load static %}
-                <td><img src="{{ room.images }}" width="120" height="120"></td>
+                <td><strong>{{ room.hotel_name }}</strong><br><img src="{{ room.images }}" width="120" height="120"></td>
                 <td>{{ room.room_area }}</td>
                 <td>{{ room.room_include }}</td>
                 <td>{{ room.roomType }}</td>
                 <td>{{ room.address }}</td>
                 <td>{{ room.district }}</td>
                 <td>{{ room.nearby_places }}</td>
-                <!-- <td>{{ room.number }}</td>
-                <td>{{ room.capacity }}</td>
-                <td>{{ room.numberOfBeds }}</td> -->
-                
                 <td>{{ room.price }}</td>
                 
 
@@ -145,3 +147,11 @@
     </table>
 
 </div>
+
+<script>
+    function clearAllInputsAndSubmit() {
+        document.getElementById("roomFilterForm").reset();
+        document.getElementById("roomFilterForm").submit();
+    }
+    </script>
+    

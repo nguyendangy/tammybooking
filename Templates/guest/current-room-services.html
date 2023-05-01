@@ -13,8 +13,8 @@
         <div class="col-md-6">
             <div class="table-header row">
 
-                <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
-                    <h2>Room Services</h2>
+                <div class="col-sm-12 col-md-12 mb-4">
+                    <h2>Current Stay Services</h2>
                     <span class="text-muted">The list include last 1 month room services</span>
                 </div>
 
@@ -23,7 +23,7 @@
                 <thead class="bg-secondary rounded">
                     <tr>
 
-                        <th>Room Number</th>
+                        <th>Accommodation Name</th>
                         <th>Type</th>
                         <th>Created Date</th>
                         <th>Price</th>
@@ -32,7 +32,7 @@
                 <tbody>
                     {% for crs in curRoomServices %}
                     <tr>
-                        <td>{{curRoom}}</td>
+                        <td>{{curRoomName}}</td>
                         <td>{{crs.servicesType}}</td>
                         <td>{{crs.createdDate}}</td>
                         <td>{{crs.price}}</td>
@@ -46,7 +46,7 @@
         <div class="table-responsive col-md-6">
             <div class="table-header row">
 
-                <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
+                <div class="col-sm-12 col-md-12 mb-4">
                     <h2> Available Services</h2>
                     <span class="text-muted">You can select service from this menu.</span>
                 </div>

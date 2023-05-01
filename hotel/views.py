@@ -44,7 +44,13 @@ def guest_home(request, pk):
     eventAttendees = EventAttendees.objects.filter(guest=guest)
     bookings = Booking.objects.filter(guest=guest)
     reviews = Review.objects.all()
-    top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+    # top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+    # Lấy danh sách 4 phòng khách sạn có điểm đánh giá cao nhất
+    top_hotel_rooms = Room.objects.filter(roomType='King').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+
+    # Lấy danh sách 4 phòng homestay có điểm đánh giá cao nhất
+    top_homestay_rooms = Room.objects.filter(roomType='Vip').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+
 
     context = {
         "role": role,
@@ -52,7 +58,8 @@ def guest_home(request, pk):
         "eventAttendees": eventAttendees,
         "bookings": bookings,
         "reviews": reviews,
-        "top_rooms": top_rooms
+        'top_homestay_rooms': top_homestay_rooms,
+        'top_hotel_rooms': top_hotel_rooms,
     }
     return render(request, path + "guest-home.html", context)
 

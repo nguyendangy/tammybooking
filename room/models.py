@@ -15,13 +15,19 @@ def upload_room_images(instance,filename):
 def upload_cover_image(instance,filename):
     return "Room/cover/{id}/{filename}/".format(id=instance.id,filename=filename)
 
+class TouristPlace(models.Model):
+    name = models.CharField(max_length=100)
+    photo = models.ImageField(upload_to='tourist_place_images/')
+    description = models.TextField()
+    distance_from_room = models.FloatField()
+    
 class Room(models.Model):
     ROOM_TYPES = (
-        ('King', 'King'),
-        ('Luxury', 'Luxury'),
+        ('Hotel', 'Hotel'),
+        ('HomeStay', 'HomeStay'),
         ('Normal', 'Normal'),
-        ('Economic', 'Economic'),
-
+        ('Vip', 'Vip'),
+        ('King', 'King'),
     )
 
     ROOM_ADDRESS = (
@@ -60,7 +66,8 @@ class Room(models.Model):
     discount = models.FloatField(default=0.0)
 
     images = models.ImageField(upload_to='room_images/', blank=True)
-    
+    tourist_place = models.ForeignKey(TouristPlace, on_delete=models.CASCADE, null=True)
+
     def discounted_price(self):
         if self.discount:
             return float(self.price * (100 - self.discount) / 100)

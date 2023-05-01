@@ -50,17 +50,28 @@ class RatingForm(forms.ModelForm):
         return instance
 
 class RoomForm(forms.ModelForm):
+    tourist_place = forms.ModelChoiceField(queryset=TouristPlace.objects.all(), required=False)
+
     class Meta:
         model = Room
+
         fields = ['hotel_name', 'room_area',  'room_include', 'roomType', 'address', 'district', 'nearby_places', 'images',
-                  'capacity', 'numberOfBeds', 'price', 'discount']
+                  'capacity', 'numberOfBeds', 'price', 'discount' , 'tourist_place']
+        labels = {
+        "discount": "Discount percent",
+        }
 
 
 class editRoom(ModelForm):
+    tourist_place = forms.ModelChoiceField(queryset=TouristPlace.objects.all(), required=False)
+
     class Meta:
         model = Room
         fields = ['hotel_name', 'room_area',  'room_include', 'roomType', 'address', 'district', 'nearby_places', 'images',
-                  'capacity', 'numberOfBeds', 'price', 'discount']
+                  'capacity', 'numberOfBeds', 'price', 'discount' , 'tourist_place']
+        labels = {
+        "discount": "Discount percent",
+        }
 
 
 class editBooking(ModelForm):
@@ -73,3 +84,13 @@ class editDependees(ModelForm):
     class Meta:
         model = Dependees
         fields = ["booking", "name"]
+
+class TouristPlaceForm(forms.ModelForm):
+    class Meta:
+        model = TouristPlace
+        fields = ('name', 'photo', 'description', 'distance_from_room')
+
+class editTouristPlaceForm(forms.ModelForm):
+    class Meta:
+        model = TouristPlace
+        fields = ('name', 'photo', 'description', 'distance_from_room')

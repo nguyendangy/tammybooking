@@ -40,12 +40,12 @@ def rooms(request):
 
     def chech_availability(fd, ed):
         availableRooms = []
-        
+
         for room in rooms:
             availList = []
             bookingList = Booking.objects.filter(roomNumber=room)
-            print("bookingList",bookingList)
-            
+            print("bookingList", bookingList)
+
             if room.statusStartDate == None:
                 for booking in bookingList:
                     if booking.startDate > ed.date() or booking.endDate < fd.date():
@@ -76,33 +76,27 @@ def rooms(request):
             rooms = chech_availability(firstDay, lastDate)
 
         if "filter" in request.POST:
-            # if (request.POST.get("number") != ""):
-            #     rooms = rooms.filter(
-            #         number__contains=request.POST.get("number"))
 
-            # if (request.POST.get("capacity") != ""):
-            #     rooms = rooms.filter(
-            #         capacity__gte=request.POST.get("capacity"))
+            if (request.POST.get("hotel_name") != ""):
+                rooms = rooms.filter(
+                    hotel_name__contains=request.POST.get("hotel_name"))
 
-            # if (request.POST.get("nob") != ""):
-            #     rooms = rooms.filter(
-            #         numberOfBeds__gte=request.POST.get("nob"))
             if (request.POST.get("room_area") != ""):
                 rooms = rooms.filter(
                     room_area__contains=request.POST.get("room_area"))
-                
+
             if (request.POST.get("room_include") != ""):
                 rooms = rooms.filter(
                     room_include__contains=request.POST.get("room_include"))
-                
+
             if (request.POST.get("type") != ""):
                 rooms = rooms.filter(
                     roomType__contains=request.POST.get("type"))
-                
+
             if (request.POST.get("address") != ""):
                 rooms = rooms.filter(
                     address__contains=request.POST.get("address"))
-                
+
             if (request.POST.get("district") != ""):
                 rooms = rooms.filter(
                     district__contains=request.POST.get("district"))
@@ -114,7 +108,7 @@ def rooms(request):
             if (request.POST.get("price") != ""):
                 rooms = rooms.filter(
                     price__contains=request.POST.get("price"))
-
+        
             context = {
                 "role": role,
                 "rooms": rooms,
@@ -124,7 +118,9 @@ def rooms(request):
                 "address": request.POST.get("address"),
                 "district": request.POST.get("district"),
                 "nearby_places": request.POST.get("nearby_places"),
-                "price": request.POST.get("price")
+                "price": request.POST.get("price"),
+                'fd': firstDayStr,
+                'ld': lastDateStr
             }
             return render(request, path + "rooms.html", context)
 
@@ -143,6 +139,7 @@ def rooms(request):
 #             path = default_storage.save('room_images/' + str(image), image)
 #             Room_image.objects.create(room=instance, image=path, image_url=default_storage.url(path))
 
+
 @login_required(login_url='login')
 def add_room(request):
     role = str(request.user.groups.all()[0])
@@ -156,7 +153,7 @@ def add_room(request):
     #         guest = request.user.employee
 
     #     # announcement = Announcement(sender = sender, content = request.POST.get('textid'))
-        
+
     #     # room = Room()
 
     #     number = request.POST.get('number')
@@ -168,14 +165,14 @@ def add_room(request):
     #     hotel_name = request.POST.get('hotel-name')
     #     room_include = request.POST.get('room-include')
     #     price_discount = request.POST.get('price-discount')
-        
+
     #     # if len(request.FILES['images']) != 0:
     #     # images = request.POST.get('images')
 
     #     # print(capacity)
     #     room = Room(number=number, capacity=capacity,
     #                 numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address, hotel_name = hotel_name,room_include=room_include,price_discount=price_discount)
-       
+
     #     if request.FILES.getlist('images'):
     #         images = request.FILES.getlist('images')
     #         for image in images:
@@ -190,7 +187,7 @@ def add_room(request):
     #     messages.info(request,'ROOM is saved')
 
     #     return redirect('rooms')
-   
+
     if request.method == 'POST':
         form = RoomForm(request.POST, request.FILES)
         if form.is_valid():
@@ -219,6 +216,7 @@ def add_room(request):
     }
     return render(request, path + "add-room.html", context)
 
+
 @login_required(login_url='login')
 def my_room(request):
     import datetime
@@ -239,7 +237,7 @@ def my_room(request):
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
         room = Room.objects.get(number=booking.roomNumber.number)
-        discounted_price = (room.price  * (100 - room.discount) / 100)
+        discounted_price = (room.price * (100 - room.discount) / 100)
         if room.discount:
             total = discounted_price * numberOfDays
         else:
@@ -257,6 +255,7 @@ def my_room(request):
     }
     return render(request, path + "my-room.html", context)
 
+
 @login_required(login_url='login')
 def hotel_policy(request):
     role = str(request.user.groups.all()[0])
@@ -264,7 +263,8 @@ def hotel_policy(request):
     context = {
         "role": role
     }
-    return render(request, path +  "hotel-policy.html", context)
+    return render(request, path + "hotel-policy.html", context)
+
 
 @login_required(login_url='login')
 def room_profile(request, pk):
@@ -276,38 +276,57 @@ def room_profile(request, pk):
     bookings = Booking.objects.filter(roomNumber=tempRoom)
     review_all_user_in_room = Review.objects.filter(room=tempRoom)
     guests = Guest.objects.all()
+    
 
     # Create a Paginator object
-    review_list = review_all_user_in_room.all().order_by('-created_at')
+    review_list = review_all_user_in_room.all()
 
-    paginator = Paginator(review_list, 2) # Show 10 reviews per page
+    # Sorting
+    sort = request.GET.get('sort')
+    if sort == 'latest':
+        review_list = review_list.order_by('-created_at')
+    elif sort == 'highest':
+        review_list = review_list.order_by('-rate')
+    elif sort == 'lowest':
+        review_list = review_list.order_by('rate')
 
+    # paginator = Paginator(review_list, 2)  # Show 10 reviews per page
+    
+    per_page = int(request.GET.get('per_page', 5))
+    paginator = Paginator(review_list, per_page)  # Show n reviews per page
     page_number = request.GET.get('page')
     reviews = paginator.get_page(page_number)
 
+     # Dropdown
+    per_page_options = [2, 5, 10]
+    selected_per_page = per_page
+    if selected_per_page not in per_page_options:
+        selected_per_page = 2
+
     if role == 'guest':
         curGuest = Guest.objects.get(user=request.user)
-        bookings3 = Booking.objects.filter(roomNumber=tempRoom,guest=curGuest)
-        review = Review.objects.filter(room=tempRoom,user=curGuest,booking=bookings3)
+        bookings3 = Booking.objects.filter(roomNumber=tempRoom, guest=curGuest)
+        review = Review.objects.filter(
+            room=tempRoom, user=curGuest, booking=bookings3)
         context = {
-        "role": role,
-        "bookings": bookings,
-        "room": tempRoom,
-        "guests": guests,
-        "bookings3": bookings3,
-        "review":review,
-        "reviews": reviews,
-        "reviewalluser":review_all_user_in_room,
-        'average_rating': tempRoom.averagereview(),
-        'review_count': tempRoom.countreview(),
-        # "form": form
+            "role": role,
+            "bookings": bookings,
+            "room": tempRoom,
+            "guests": guests,
+            "bookings3": bookings3,
+            "review": review,
+            "reviews": reviews,
+            "reviewalluser": review_all_user_in_room,
+            'average_rating': tempRoom.averagereview(),
+            'review_count': tempRoom.countreview(),
+            'per_page_options': per_page_options,
+            'selected_per_page': selected_per_page,
+            'sort':sort
         }
         return render(request, path + "room-profile.html", context)
 
     elif role == 'manager' or role == 'admin' or role == 'receptionist':
         curGuest = Employee.objects.get(user=request.user)
-
-    
 
     context = {
         "role": role,
@@ -315,7 +334,7 @@ def room_profile(request, pk):
         "room": tempRoom,
         "guests": guests,
         "reviews": reviews,
-        "reviewalluser":review_all_user_in_room,
+        "reviewalluser": review_all_user_in_room,
         'average_rating': tempRoom.averagereview(),
         'review_count': tempRoom.countreview(),
         # "form": form
@@ -355,6 +374,7 @@ def room_profile(request, pk):
 
     return render(request, path + "room-profile.html", context)
 
+
 def room_review(request, pk):
     role = str(request.user.groups.all()[0])
     path = role + "/"
@@ -362,9 +382,8 @@ def room_review(request, pk):
     guests = Guest.objects.all()
     curGuest = Guest.objects.get(user=request.user)
     rooms = Room.objects.get(number=pk)
-    review = Review.objects.filter(room=rooms, user = curGuest).last()
+    review = Review.objects.filter(room=rooms, user=curGuest).last()
     reviews = Review.objects.all()
-
 
     # subject = request.GET.get('subject')
 
@@ -375,7 +394,6 @@ def room_review(request, pk):
             if form.is_valid():
                 new_review = form.save()
 
-                
                 if 'images' in request.FILES:
                     images = []
 
@@ -385,7 +403,7 @@ def room_review(request, pk):
                         filename = fs.save(image.name, image)
                         filepath = fs.path(filename)
                         # Resize image if necessary
-                        img = Image.open(filepath)    
+                        img = Image.open(filepath)
                         if img.height > 1000 or img.width > 1000:
                             img.thumbnail((1000, 1000))
                             img.save(filepath)
@@ -402,7 +420,8 @@ def room_review(request, pk):
                         review.delete()  # delete previous review
                     new_review.save()
                     for image_url in images:
-                        ReviewImage.objects.create(review=new_review, image=image_url)
+                        ReviewImage.objects.create(
+                            review=new_review, image=image_url)
                 else:
 
                     images = None
@@ -410,16 +429,15 @@ def room_review(request, pk):
                     new_review.user = curGuest
                     if review:
                         review.delete()  # delete previous review
-                    new_review.save()  
-                
+                    new_review.save()
+
                 # Lưu trữ các ảnh được tải lên
                 # for image in request.FILES.getlist('images'):
                 #     new_review.images.create(image=image)
 
-               
                 # Create ReviewImage objects for each image
-                
-                return redirect('room-profile',pk=rooms.number)
+
+                return redirect('room-profile', pk=rooms.number)
 
     else:
         form = RatingForm(instance=review)
@@ -427,12 +445,13 @@ def room_review(request, pk):
         "role": role,
         "guests": guests,
         "curGuest": curGuest,
-        "rooms":rooms,
-        "review":review,
-        "reviews":reviews,
+        "rooms": rooms,
+        "review": review,
+        "reviews": reviews,
         "form": form
     }
-    return render(request, path + "room-review.html", context) 
+    return render(request, path + "room-review.html", context)
+
 
 @login_required(login_url='login')
 def room_edit(request, pk):
@@ -441,10 +460,10 @@ def room_edit(request, pk):
 
     room = Room.objects.get(number=pk)
     old_image_path = str(room.images)
-    print("old_image_path:" , old_image_path)
+    print("old_image_path:", old_image_path)
     # form1 = editRoom(instance=room)
     # form = editRoom(request.POST or None, request.FILES or None, instance=room)
-   
+
     # if form.is_valid():
     #     form.save()
     #     return redirect("room-profile", id=room.number)
@@ -455,9 +474,9 @@ def room_edit(request, pk):
             if 'images' in request.FILES:
                 # Delete old image
                 # if room.images:
-                    # fs = FileSystemStorage()
-                    # if fs.exists(room.images.name):
-                    #     fs.delete(room.images.name)
+                # fs = FileSystemStorage()
+                # if fs.exists(room.images.name):
+                #     fs.delete(room.images.name)
 
                 # Save new image
                 image = request.FILES['images']
@@ -518,23 +537,21 @@ def room_services(request):
             if (request.POST.get("credate") != ""):
                 room_services = room_services.filter(
                     createdDate=request.POST.get("credate"))
-            
+
             if (request.POST.get("price") != ""):
                 room_services = room_services.filter(
                     price=request.POST.get("price"))
-                
+
             if (request.POST.get("month") != ""):
                 room_services = room_services.filter(
                     createdDate__month=request.POST.get("month"))
-                
+
             if (request.POST.get("year") != ""):
                 room_services = room_services.filter(
                     createdDate__year=request.POST.get("year"))
-                
+
             num_services = room_services.count()
             total_price = room_services.aggregate(Sum('price'))['price__sum']
-
-
 
             context = {
                 "role": role,
@@ -547,7 +564,7 @@ def room_services(request):
                 "month": request.POST.get("month"),
                 "year": request.POST.get("year"),
                 'num_services': num_services,
-                'total_price' : total_price
+                'total_price': total_price
 
             }
 
@@ -571,6 +588,7 @@ def current_room_services(request):
     curBooking = Booking.objects.filter(guest=curGuest).last()
     if curBooking is not None:
         curRoom = Room.objects.get(number=curBooking.roomNumber.number)
+        curRoomName = curRoom.hotel_name
     else:
         context = {
             "role": role,
@@ -601,7 +619,8 @@ def current_room_services(request):
         "curGuest": curGuest,
         "curBooking": curBooking,
         "curRoom": curRoom,
-        "curRoomServices": curRoomServices
+        "curRoomServices": curRoomServices,
+        'curRoomName': curRoomName
     }
 
     if request.method == "POST":
@@ -612,7 +631,7 @@ def current_room_services(request):
 
             chosenEmp = random.choice(availableEmployee)
             lastTask = Task.objects.filter(employee=chosenEmp).last()
-            if(lastTask != None):
+            if (lastTask != None):
                 newTask = Task(employee=chosenEmp, startTime=lastTask.endTime,
                                endTime=lastTask.endTime+datetime.timedelta(minutes=30), description="Food Request")
             else:
@@ -620,7 +639,7 @@ def current_room_services(request):
                                endTime=datetime.datetime.now()+datetime.timedelta(minutes=30), description="Food Request")
             newTask.save()
             return redirect("current-room-services")
-        
+
         if "drinkReq" in request.POST:
             newServiceReq = RoomServices(
                 curBooking=curBooking, price=50.0, room=curRoom,  servicesType='Drink')
@@ -628,7 +647,7 @@ def current_room_services(request):
 
             chosenEmp = random.choice(availableEmployee)
             lastTask = Task.objects.filter(employee=chosenEmp).last()
-            if(lastTask != None):
+            if (lastTask != None):
                 newTask = Task(employee=chosenEmp, startTime=lastTask.endTime,
                                endTime=lastTask.endTime+datetime.timedelta(minutes=30), description="Drink Request")
             else:
@@ -644,7 +663,7 @@ def current_room_services(request):
             chosenEmp = random.choice(availableEmployee)
             lastTask = Task.objects.filter(employee=chosenEmp).last()
 
-            if(lastTask != None):
+            if (lastTask != None):
                 newTask = Task(employee=chosenEmp, startTime=lastTask.endTime,
                                endTime=lastTask.endTime+datetime.timedelta(minutes=30), description="Cleaning Request")
             else:
@@ -659,7 +678,7 @@ def current_room_services(request):
             newServiceReq.save()
             chosenEmp = random.choice(availableEmployee)
             lastTask = Task.objects.filter(employee=chosenEmp).last()
-            if(lastTask != None):
+            if (lastTask != None):
                 newTask = Task(employee=chosenEmp, startTime=lastTask.endTime,
                                endTime=lastTask.endTime+datetime.timedelta(minutes=30), description="Tech Request")
             else:
@@ -670,6 +689,95 @@ def current_room_services(request):
 
     return render(request, path + "current-room-services.html", context)
 
+@login_required(login_url='login')
+def tourist_place(request):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+    tourist_places = TouristPlace.objects.all()
+    context = {
+        "role": role,
+        'tourist_places': tourist_places
+    }
+    return render(request, path + 'tourist_place.html', context)
+
+
+@login_required(login_url='login')
+def add_tourist_place(request):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+    if request.method == 'POST':
+        form = TouristPlaceForm(request.POST, request.FILES)
+        if form.is_valid():
+            room = form.save(commit=False)
+            if 'images' in request.FILES:
+                image = request.FILES['images']
+                fs = FileSystemStorage()
+                filename = fs.save(image.name, image)
+                filepath = fs.path(filename)
+                # Resize image if necessary
+                img = Image.open(filepath)
+                if img.height > 1000 or img.width > 1000:
+                    img.thumbnail((1000, 1000))
+                    img.save(filepath)
+                # Set URL of image file in Room model
+                room.images = fs.url(filename)
+            room.save()
+            messages.success(request, 'Tourist place added successfully.')
+            return redirect('tourist_place')
+    else:
+        form = TouristPlaceForm()
+
+    context = {
+        "role": role,
+        "form": form
+    }
+    return render(request, path + "add_tourist_place.html", context)
+
+@login_required(login_url='login')
+def edit_tourist_place(request,pk):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+
+    tourist_place = TouristPlace.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = editTouristPlaceForm(request.POST, request.FILES, instance=tourist_place)
+        if form.is_valid():
+            room = form.save(commit=False)
+            if 'images' in request.FILES:
+
+                # Save new image
+                image = request.FILES['images']
+                fs = FileSystemStorage()
+                filename = fs.save(image.name, image)
+                filepath = fs.path(filename)
+
+                # Resize image if necessary
+                img = Image.open(filepath)
+                if img.height > 1000 or img.width > 1000:
+                    img.thumbnail((1000, 1000))
+                    img.save(filepath)
+
+                # Update Room object with new image URL
+                room.images = fs.url(filename)
+
+            # Save updated Room object to database
+            room.save()
+            messages.success(request, 'Room updated successfully.')
+            return redirect('tourist_place')
+    else:
+        form = editTouristPlaceForm(instance=tourist_place)
+    context = {
+        "role": role,
+        "room": room,
+        "form": form
+    }
+    return render(request, path + "edit_tourist_place.html", context)
+
+@login_required(login_url='login')
+def delete_tourist_place(request, pk):
+    tourist_place = TouristPlace.objects.get(pk=pk)
+    tourist_place.delete()
+    return redirect('tourist_place')
 
 @login_required(login_url='login')
 def bookings(request):
@@ -689,7 +797,7 @@ def bookings(request):
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
         room = Room.objects.get(number=booking.roomNumber.number)
-        discounted_price = (room.price  * (100 - room.discount) / 100)
+        discounted_price = (room.price * (100 - room.discount) / 100)
         if room.discount:
             total = discounted_price * numberOfDays
         else:
@@ -724,32 +832,28 @@ def bookings(request):
             if (request.POST.get("ed") != ""):
                 bookings = bookings.filter(
                     endDate__lte=request.POST.get("ed"))
-            
+
             if (request.POST.get("month") != ""):
                 bookings = bookings.filter(
                     startDate__month=request.POST.get("month"))
-                
+
             if (request.POST.get("year") != ""):
                 bookings = bookings.filter(
                     startDate__year=request.POST.get("year"))
-            num_rooms = bookings.count()
-            totals = {}  # <booking : total>
-            total_amount = 0
-            for booking in bookings:
-                start_date = datetime.datetime.strptime(
-                    str(booking.startDate), "%Y-%m-%d")
-                end_date = datetime.datetime.strptime(str(booking.endDate), "%Y-%m-%d")
-                numberOfDays = abs((end_date-start_date).days)
-                # get room peice:
-                room = Room.objects.get(number=booking.roomNumber.number)
-                discounted_price = (room.price  * (100 - room.discount) / 100)
-                if room.discount:
-                    total = discounted_price * numberOfDays
-                else:
-                    total = room.price * numberOfDays
-                totals[booking] = total
-                total_amount += total
+            
+            
+            if (request.POST.get("totals") != ""):
+                filtered_bookings = []
+                filtered_totals = {}
+                for booking, total in totals.items():
+                    if request.POST.get("totals") in str(total):
+                        filtered_bookings.append(booking)
+                        filtered_totals[booking] = total
+                bookings = bookings.filter(id__in=[booking.id for booking in filtered_bookings])
+                totals = filtered_totals
 
+            num_rooms = bookings.count()
+            total_amount = sum(totals.values())
 
             context = {
                 "role": role,
@@ -786,7 +890,7 @@ def booking_make(request):
     # room = Room()
     # room.number = request.POST.get('roomid')
     # room.save()
-    numbers=request.POST.get('roomid')
+    numbers = request.POST.get('roomid')
     room = Room.objects.get(number=numbers)
     guests = Guest.objects.all()  # we pass this to context
     names = []
@@ -801,7 +905,7 @@ def booking_make(request):
             str(request.POST.get("ld")), "%Y-%m-%d")
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
-        discounted_price = (room.price  * (100 - room.discount) / 100)
+        discounted_price = (room.price * (100 - room.discount) / 100)
         if room.discount:
             total = discounted_price * numberOfDays
         else:
@@ -942,7 +1046,6 @@ def refunds(request):
                 messages.success(
                     request, 'Feedback email was successfully sent, and this booking has been deleted.')
 
-
             refundId = None
             statu = None
 
@@ -992,12 +1095,12 @@ def request_refund(request):
         if "sendReq" in request.POST:
             reason = request.POST.get("reqExp")
             curBookingId = request.POST.get("bid")
-            print("curBookingId",curBookingId)
+            print("curBookingId", curBookingId)
             currentBooking = Booking.objects.get(id=curBookingId)
-            print("currentBooking",currentBooking)
+            print("currentBooking", currentBooking)
 
             temp = Refund.objects.filter(reservation=currentBooking)
-            print("temp",temp)
+            print("temp", temp)
 
             if not temp:
                 currentReq = Refund(

@@ -1,0 +1,37 @@
+
+  <h2>Tourist Places</h2>
+  <a href="{% url 'add_tourist_place' %}" class="btn btn-primary">Add Tourist Place</a>
+  <table class="table">
+    <thead>
+      <tr>
+        {% csrf_token %}
+        <th>Name</th>
+        <th>Photo</th>
+        <th>Description</th>
+        <th>Distance from Room</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for place in tourist_places %}
+        <tr>
+          <td>{{ place.name }}</td>
+          <td><img src="{{ place.photo.url }}" alt="{{ place.name }}" height="50"></td>
+          <td>{{ place.description }}</td>
+          <td>{{ place.distance_from_room }}</td>
+          <td>
+            <a href="{% url 'edit_tourist_place' place.id %}" class="btn btn-primary btn-sm">Edit</a>
+            <form action="{% url 'delete_tourist_place' place.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No tourist places found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>

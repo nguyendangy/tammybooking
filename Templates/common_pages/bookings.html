@@ -27,7 +27,9 @@
                     <th>End Day<input type="date" name="ed" value="{{ed}}" class="form-control border border-secondary">
                     </th>
                     <!-- <th class="pb-5">Number of Dependees</th> -->
-                    <th class="pb-5">Total amount</th>
+                    <!-- <th class="pb-5">Total amount</th> -->
+                    <th>Total amount<input type="text" name="totals" value="{{total_amount}}" class="form-control border border-secondary"></th>
+
                     <th>Month<input type="text" name="month" value="{{month}}" class="form-control border border-secondary"></th>
                     <th>Year<input type="year" name="year" value="{{year}}" style="width:70px;" class="form-control border border-secondary"></th>
                     <th><button type="submit" name="filter" class="btn btn-warning w-100">Filter</button></th>
@@ -39,7 +41,7 @@
         <tbody>
             {% for b in bookings %}
             <tr>
-                <td><a href="{% url 'room-profile' b.roomNumber.hotel_name %}">{{b.roomNumber.hotel_name}}</a></td>
+                <td><a href="{% url 'room-profile' b.roomNumber.number %}">{{b.roomNumber.hotel_name}}</a></td>
                 <td><a href="{% url 'guest-profile' b.guest.user.id %}">{{b.guest.user.first_name}}</a></td>
                 <td>{{ b.dateOfReservation }}</td>
                 <td>{{ b.startDate }}</td>

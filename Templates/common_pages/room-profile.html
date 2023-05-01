@@ -54,31 +54,36 @@
         color: #f1f1f1;
         cursor: pointer;
     }
+
     /* phan trang */
     .pagination-wrapper {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.pagination-wrapper a {
-    color: #333;
-    text-decoration: none;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    margin: 0 5px;
-    border-radius: 5px;
-}
+    .pagination-wrapper a {
+        color: #333;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        padding: 5px 10px;
+        margin: 0 5px;
+        border-radius: 5px;
+    }
 
-.pagination-wrapper .current-page {
-    font-weight: bold;
-    margin: 0 10px;
-}
+    .pagination-wrapper .current-page {
+        font-weight: bold;
+        margin: 0 10px;
+    }
 
-.pagination-wrapper .disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    .pagination-wrapper .disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .star.yellow {
+    color: #ffc107;
 }
 
 </style>
@@ -86,14 +91,15 @@
     <div class="shadow-lg p-5">
 
         <div class="row mt-3">
-            <div class="col-md-12">
-                <h2>{{room.hotel_name}}</h2>
-            </div>
-            <div class="col-md-12">
-                <h2 style="font-size: 1rem; color: gray;"><i class="fas fa-map-marker-alt"></i> {{room.address}}</h2>
-            </div>
+            
 
             <div class="col-md-6">
+                <div class="p-2 h4">
+                    <h2>{{room.hotel_name}}</h2>
+                </div>
+                <div class="p-2 h4">
+                    <h2 style="font-size: 1rem; color: gray;"><i class="fas fa-map-marker-alt"></i> {{room.address}}</h2>
+                </div>
 
                 <div class="p-2 h4">
                     <span>Room Number:</span>
@@ -138,18 +144,21 @@
                 </div>
                 <div class="p-2 h4">
                     <span>Average Rating: </span>
-                    <span class="font-weight-normal"> {{ average_rating|floatformat:1 }} - ({{ review_count }} reviews)</span>                
+                    <span class="font-weight-normal"> {{ average_rating|floatformat:1 }} - ({{ review_count }}
+                        reviews)</span>
                 </div>
             </div>
 
             <div class="col-md-6">
                 {% if role == 'guest' %}
+                <div class="p-2 h4 " style="align-content:center; width: 120px; margin-top:30px;" >
+                    <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>Book Now</strong> </a>
+                </div>
+                {% endif %}
 
                 <div class="p-2 h4">
                     <img src="{{ room.images }}" alt="" class="img-fluid" style="border-radius: 10px;">
                 </div>
-
-                {% endif %}
 
 
 
@@ -196,80 +205,108 @@
                 <div class="p-2 h4 border p-3 mt-3" style="border-radius: 10px;">
                     <div class="row">
                         <div class="col-md-6 d-flex">
-                            <span>Rating: </span>
+                            <span class="star yellow"><strong>Rating</strong> &#9733;&#9733;&#9733;&#9733;&#9733; </span>
                         </div>
-                        <div class="col-md-6 text-right">
-                            {% if role == 'guest'%} 
-                                {% if bookings3 %} 
-                                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>                      
-                                {% endif %}
+                        <div class="col-md-6 text-right ">
+                            {% if role == 'guest'%}
+                            {% if bookings3 %}
+                            <a href="{% url 'room-review' room.number %}" class="btn btn-warning">Write review</a>
+                            {% else %}
+                            Please make a reservation for review
+                            {% endif %}
                             {% endif %}
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="font-weight-normal">
+                    <div class="dropdown ml-auto">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-sort mr-2"></i> Sort By:
+                            {% if sort == 'latest' %}
+                            <span>Latest</span>
+                            {% elif sort == 'highest' %}
+                            <span>Highest Rating</span>
+                            {% elif sort == 'lowest' %}
+                            <span>Lowest Rating</span>
+                            {% else %}
+                            <span>None</span>
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                            <a class="dropdown-item" href="?sort=latest">Latest</a>
+                            <a class="dropdown-item" href="?sort=highest">Highest Rating</a>
+                            <a class="dropdown-item" href="?sort=lowest">Lowest Rating</a>
+                        </div>
+                       
+                    </div>
+                    
                     {% for review in reviews %}
                     <div class="font-weight-normal border p-3 mt-3" style="border-radius: 10px;">
-                    <strong><p >{{ review.user }}</strong> wrote a review {{ review.created_at|date:"d/m/Y" }}</p>
-                    
-                    
-                    <div>
-                        <p>
-                         {% for i in "12345" %}
-                            {% if i <= review.rate|stringformat:"i" %} &#9733; {% else %} &#9734; {% endif %}
-                        {% endfor %}
-                        </p>
-                    </div>
-                    <p>{{ review.subject }}</p>
-                    <p>{{ review.comment }}</p>
-                    <p><strong>Date of stay:</strong> {{ review.trip_date }}</p>
-                    <div class="row">
-                        {% for image in review.images.all|slice:":5" %}
-                        <div class="col-4 mb-3">
-                                <img src="{{ image.image }}" alt="{{ image.image.name }}" class="img-fluid review-image-thumb" style="height:100px;width:100px;" onclick="showImageModal('{{ image.image }}')">
-                            
+                        <strong>
+                            <p>{{ review.user }}
+                        </strong> wrote a review {{ review.created_at|date:"d/m/Y" }}</p>
+
+                        <div>
+                            <p class="star yellow">
+                                {% for i in "12345" %}
+                                    {% if i <= review.rate|stringformat:"i" %} &#9733; {% else %} &#9734; {% endif %}
+                                {% endfor %} </p>
                         </div>
                         
-                        {% endfor %}
-                    </div>
-                    <div class="row">
-                        {% for image in review.images.all|slice:":5" %}
-                            <div id="imageModal" class="modal">
+                        <p>{{ review.subject }}</p>
+                        <p>{{ review.comment }}</p>
+                        <p><strong>Date of stay:</strong> {{ review.trip_date }}</p>
+                        <div class="row">
+                            {% for image in review.images.all|slice:":5" %}
+                                <div class="col-4 mb-3">
+                                    <img src="{{ image.image }}" alt="{{ image.image.name }}"
+                                        class="img-fluid review-image-thumb" style="height:100px;width:100px;"
+                                        onclick="showImageModal('{{ image.image }}')">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row">
+                            {% for image in review.images.all|slice:":5" %}
+                                <div id="imageModal" class="modal">
+                                    <span class="close" onclick="closeImageModal()">&times;</span>
+                                    <img src="{{ image.image }}" alt="{{ image.image.name }}"
+                                        class="img-fluid  modal-content" id="modalImage"
+                                        onclick="showImageModal('{{ image.image }}')">
+                                </div>
+                            {% endfor %}
+                        </div>
 
-                                <span class="close" onclick="closeImageModal()" >&times;</span>
-                                <img src="{{ image.image }}" alt="{{ image.image.name }}" class="img-fluid  modal-content" id="modalImage"  onclick="showImageModal('{{ image.image }}')">
-                            </div>
-                        {% endfor %}
+                        <div id="reviewImageModal" class="modal">
+                            <span class="close">&times;</span>
+                            <img class="modal-content" id="reviewImage">
+                        </div>
                     </div>
-
-                    <div id="reviewImageModal" class="modal">
-                        <span class="close">&times;</span>
-                        <img class="modal-content" id="reviewImage">
-                    </div>
-                    </div>
-                    {% empty %}
+                {% empty %}
                     <p>No review yet.</p>
-                    {% endfor %}
+                {% endfor %}    
+
+
 
                     <div class="pagination-wrapper">
                         <span class="step-links">
                             {% if reviews.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ reviews.previous_page_number }}">previous</a>
+                            <a href="?page=1">&laquo; first</a>
+                            <a href="?page={{ reviews.previous_page_number }}">previous</a>
                             {% endif %}
-                
+
                             <span class="current-page">
                                 Page {{ reviews.number }} of {{ reviews.paginator.num_pages }}.
                             </span>
-                
+
                             {% if reviews.has_next %}
-                                <a href="?page={{ reviews.next_page_number }}">next</a>
-                                <a href="?page={{ reviews.paginator.num_pages }}">last &raquo;</a>
+                            <a href="?page={{ reviews.next_page_number }}">next</a>
+                            <a href="?page={{ reviews.paginator.num_pages }}">last &raquo;</a>
                             {% endif %}
                         </span>
                     </div>
-                    
+
                 </div>
             </div>
             <br>

@@ -51,6 +51,10 @@ urlpatterns = [
     path('announcements/', announcements, name="announcements"),
     path('refunds/', refunds, name="refunds"),
     path('storage/', storage, name="storage"),
+    path('tourist-place/', tourist_place, name="tourist-place"),
+    path('add-tourist-place/', add_tourist_place, name="add-tourist-place"),
+    path('edit-tourist-place/<str:pk>/', edit_tourist_place, name="edit-tourist-place"),
+    path('delete-tourist-place/<str:pk>/', delete_tourist_place, name="delete-tourist-place"),
 
     path('tasks/', tasks, name="tasks"),
     path('current-room-services/', current_room_services,
