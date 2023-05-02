@@ -30,13 +30,26 @@ from django.dispatch import receiver
 from django.core.files.storage import default_storage
 
 
-@ login_required(login_url='login')
+@login_required(login_url='login')
 def rooms(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
-    rooms = Room.objects.all()
     firstDayStr = None
     lastDateStr = None
+    tourist_place = request.GET.get('tourist_place')
+    if tourist_place:
+        rooms = Room.objects.filter(tourist_place__name__icontains=tourist_place)
+        context = {
+            "role": role,
+            'rooms': rooms,
+            'fd': firstDayStr,
+            'ld': lastDateStr,
+            "tourist_place": tourist_place
+
+        }
+        return render(request, path + "rooms.html", context)
+    else:
+        rooms = Room.objects.all()
 
     def chech_availability(fd, ed):
         availableRooms = []
@@ -101,9 +114,10 @@ def rooms(request):
                 rooms = rooms.filter(
                     district__contains=request.POST.get("district"))
 
-            if (request.POST.get("nearby_places") != ""):
-                rooms = rooms.filter(
-                    nearby_places__contains=request.POST.get("nearby_places"))
+            if request.POST.get("tourist_place"):
+                tourist_place_name = request.POST.get("tourist_place")
+                rooms = rooms.filter(tourist_place__name__icontains=tourist_place_name)
+
 
             if (request.POST.get("price") != ""):
                 rooms = rooms.filter(
@@ -117,7 +131,8 @@ def rooms(request):
                 "type": request.POST.get("type"),
                 "address": request.POST.get("address"),
                 "district": request.POST.get("district"),
-                "nearby_places": request.POST.get("nearby_places"),
+                "hotel_name": request.POST.get("hotel_name"),
+                "tourist_place": request.POST.get("tourist_place"),
                 "price": request.POST.get("price"),
                 'fd': firstDayStr,
                 'ld': lastDateStr
@@ -145,49 +160,6 @@ def add_room(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
 
-    # if request.method == "POST":
-    #     guest = None
-    #     if role == 'guest':
-    #         guest = request.user.guest
-    #     elif role == 'manager' or role == 'admin' or role == 'receptionist':
-    #         guest = request.user.employee
-
-    #     # announcement = Announcement(sender = sender, content = request.POST.get('textid'))
-
-    #     # room = Room()
-
-    #     number = request.POST.get('number')
-    #     capacity = request.POST.get('capacity')
-    #     numberOfBeds = request.POST.get('beds')
-    #     roomType = request.POST.get('type')
-    #     price = request.POST.get('price')
-    #     address = request.POST.get('address')
-    #     hotel_name = request.POST.get('hotel-name')
-    #     room_include = request.POST.get('room-include')
-    #     price_discount = request.POST.get('price-discount')
-
-    #     # if len(request.FILES['images']) != 0:
-    #     # images = request.POST.get('images')
-
-    #     # print(capacity)
-    #     room = Room(number=number, capacity=capacity,
-    #                 numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address, hotel_name = hotel_name,room_include=room_include,price_discount=price_discount)
-
-    #     if request.FILES.getlist('images'):
-    #         images = request.FILES.getlist('images')
-    #         for image in images:
-    #             fs = FileSystemStorage()
-    #             filename = fs.save(image.name, image)
-    #             url = fs.url(filename)
-    #             room_image = Room_image(room=room, image_url=url)
-    #             room_image.save()
-
-    #     room.save()
-
-    #     messages.info(request,'ROOM is saved')
-
-    #     return redirect('rooms')
-
     if request.method == 'POST':
         form = RoomForm(request.POST, request.FILES)
         if form.is_valid():
@@ -205,6 +177,8 @@ def add_room(request):
                 # Set URL of image file in Room model
                 room.images = fs.url(filename)
             room.save()
+            form.save_m2m()  # Save many-to-many relationships
+
             messages.success(request, 'Room added successfully.')
             return redirect('rooms')
     else:
@@ -495,6 +469,8 @@ def room_edit(request, pk):
 
             # Save updated Room object to database
             room.save()
+            form.save_m2m()  # Save many-to-many relationships
+
             messages.success(request, 'Room updated successfully.')
             return redirect('rooms')
     else:
@@ -698,7 +674,7 @@ def tourist_place(request):
         "role": role,
         'tourist_places': tourist_places
     }
-    return render(request, path + 'tourist_place.html', context)
+    return render(request, path + "tourist-place.html", context)
 
 
 @login_required(login_url='login')
@@ -709,8 +685,8 @@ def add_tourist_place(request):
         form = TouristPlaceForm(request.POST, request.FILES)
         if form.is_valid():
             room = form.save(commit=False)
-            if 'images' in request.FILES:
-                image = request.FILES['images']
+            if 'photo' in request.FILES:
+                image = request.FILES['photo']
                 fs = FileSystemStorage()
                 filename = fs.save(image.name, image)
                 filepath = fs.path(filename)
@@ -723,15 +699,15 @@ def add_tourist_place(request):
                 room.images = fs.url(filename)
             room.save()
             messages.success(request, 'Tourist place added successfully.')
-            return redirect('tourist_place')
+            return redirect('tourist-place')
     else:
         form = TouristPlaceForm()
 
     context = {
         "role": role,
-        "form": form
+        "form": form,
     }
-    return render(request, path + "add_tourist_place.html", context)
+    return render(request, path + "add-tourist-place.html", context)
 
 @login_required(login_url='login')
 def edit_tourist_place(request,pk):
@@ -743,10 +719,10 @@ def edit_tourist_place(request,pk):
         form = editTouristPlaceForm(request.POST, request.FILES, instance=tourist_place)
         if form.is_valid():
             room = form.save(commit=False)
-            if 'images' in request.FILES:
+            if 'photo' in request.FILES:
 
                 # Save new image
-                image = request.FILES['images']
+                image = request.FILES['photo']
                 fs = FileSystemStorage()
                 filename = fs.save(image.name, image)
                 filepath = fs.path(filename)
@@ -763,21 +739,28 @@ def edit_tourist_place(request,pk):
             # Save updated Room object to database
             room.save()
             messages.success(request, 'Room updated successfully.')
-            return redirect('tourist_place')
+            return redirect('tourist-place')
     else:
         form = editTouristPlaceForm(instance=tourist_place)
     context = {
         "role": role,
-        "room": room,
         "form": form
     }
-    return render(request, path + "edit_tourist_place.html", context)
+    return render(request, path + "edit-tourist-place.html", context)
 
 @login_required(login_url='login')
 def delete_tourist_place(request, pk):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
     tourist_place = TouristPlace.objects.get(pk=pk)
-    tourist_place.delete()
-    return redirect('tourist_place')
+    if request.method == "POST":
+        tourist_place.delete()
+        return redirect('tourist-place')
+    context = {
+        "role": role,
+        "tourist_place": tourist_place
+    }
+    return render(request, path + "delete-tourist-place.html", context)
 
 @login_required(login_url='login')
 def bookings(request):

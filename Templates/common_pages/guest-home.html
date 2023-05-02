@@ -71,330 +71,415 @@
       margin-bottom: 0.5em;
    }
 
-/* video */
-.media {
-  background-color: #fff;
-  padding: 80px 0;
-}
+   /* video */
+   .media {
+      background-color: #fff;
+      padding: 80px 0;
+   }
 
-.media .section-title {
-  font-size: 36px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 60px;
-}
+   .media .section-title {
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 60px;
+   }
 
-.media-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-gap: 30px;
-}
+   .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-gap: 30px;
+   }
 
-.media-item {
-  position: relative;
-  overflow: hidden;
-}
+   .media-item {
+      position: relative;
+      overflow: hidden;
+   }
 
-.media-item img {
-  width: 100%;
-  height: auto;
-  border-radius: 15px;
-  transition: transform 0.3s ease-out;
-}
+   .media-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      transition: transform 0.3s ease-out;
+   }
 
-.media-item video {
-  width: 100%;
-  height: auto;
-}
+   .media-item video {
+      width: 100%;
+      height: auto;
+   }
 
-.media-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  transition: transform 0.3s ease-out;
-  transform: translateY(100%);
-}
+   .media-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      transition: transform 0.3s ease-out;
+      transform: translateY(100%);
+   }
 
-.media-caption:hover {
-  transform: translateY(0);
-}
+   .media-caption:hover {
+      transform: translateY(0);
+   }
 
-.media-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
-}
+   .media-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+   }
 
-@media screen and (max-width: 767px) {
-  .media .section-title {
-    font-size: 24px;
-  }
+   @media screen and (max-width: 767px) {
+      .media .section-title {
+         font-size: 24px;
+      }
 
-  .media-grid {
-    grid-template-columns: 1fr;
-  }
-}
+      .media-grid {
+         grid-template-columns: 1fr;
+      }
+   }
 
-.star {
-  color: #f1c40f; /* màu vàng */
-}
+   .star {
+      color: #f1c40f;
+      /* màu vàng */
+   }
 
-.empty-star {
-   color: #f1c40f; /* màu vàng */
-}
+   .empty-star {
+      color: #f1c40f;
+      /* màu vàng */
+   }
 
-.room-image-wrapper {
-  position: relative;
-}
+   .room-image-wrapper {
+      position: relative;
+   }
 
-.discount-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: #ff9900;
-  color: white;
-  padding: 5px;
-  font-size: 14px;
-  font-weight: bold;
-}
-.img-row-2 , .img-row-1 {
-   border-radius: 15px;
-}
-.hotel_name a{
-   color:#ff9900;
-}
+   .discount-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #ff9900;
+      color: white;
+      padding: 5px;
+      font-size: 14px;
+      font-weight: bold;
+   }
 
-/* tabs */
-/* Thêm CSS mới */
-.tab {
-   display: flex;
-   flex-direction: row;
-}
+   .img-row-2,
+   .img-row-1 {
+      border-radius: 15px;
+   }
 
-.tab button {
-   flex: 1;
-}
+   .hotel_name a {
+      color: #ff9900;
+   }
 
-.tabcontent {
-   display: none;
-}
+   /* tabs */
+   /* Thêm CSS mới */
+   .tab {
+      display: flex;
+      flex-direction: row;
+   }
 
-.tabcontent.active {
-   display: flex;
-   flex-direction: row;
-   flex-wrap: wrap;
-}
+   .tab button {
+      flex: 1;
+   }
 
-.tablinks {
-  flex-grow: 1;
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #bbb;
-}
+   .tabcontent {
+      display: none;
+   }
 
-.not{
-   padding:0px;
-   margin: 0px;
-}
+   .tabcontent.active {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+   }
 
-/* comunication */
-/* .communicate-connect{
-   padding:0px;
-   margin: 0px;
-} */
+   .tablinks {
+      flex-grow: 1;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #bbb;
+   }
+
+   .not {
+      padding: 0px;
+      margin: 0px;
+   }
+
+   /* search */
+   .search-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+   }
+
+   .search-container input[type=text] {
+      padding: 10px;
+      border: none;
+      width: 50%;
+      margin-right: 10px;
+      font-size: 18px;
+      background-color: #f2f2f2;
+   }
+
+   .search-container button {
+      padding: 10px;
+      background: #00bfff;
+      color: white;
+      border: none;
+      cursor: pointer;
+   }
+
+   .search-container button:hover {
+      background: #008080;
+   }
+
+   /* search have nearby */
+   .search-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      width: 50%;
+      padding-top: 20px;
+   }
+
+   .search-input {
+      width: 70%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px 0 0 5px;
+      font-size: 18px;
+   }
+
+   .search-btn {
+      padding: 10px 20px;
+      border: none;
+      background-color: #0077c0;
+      color: #fff;
+      border-radius: 0 5px 5px 0;
+      font-size: 18px;
+      cursor: pointer;
+   }
+
+   .search-bar {
+      position: relative;
+   }
+
+   .search-bar input[type="text"] {
+      width: 300px;
+      padding: 10px;
+   }
+
+   .search-bar {
+      position: relative;
+   }
+
+   .search-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 0 10px;
+   }
+
+   .search-btn i {
+      font-size: 1.2rem;
+      color: #000;
+   }
 
 
+   /* goi y search */
 </style>
 <div class="main-page">
 
-   <div class="col-3 centered" style="margin-top:38px;">
-      <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>Search Now</strong> </a>
-   </div>
-
-   <!-- categories -->
-   <div class="book-categories">
-      <div class="img-cate-1">
-         <div class="row location">
-            <div class=" line-1 col-md-6">
-               <img class="img-row-1" id="brightness" src="{%static '/images/suoi-nuoc-mooc.jpg'%}" alt="">
-               <div class="centered img-text">Mooc Spring</div>
-            </div>
-            <div class="line-2  col-md-6">
-               <img class="img-row-1" id="brightness" src="{%static '/images/sun-spa-quangbinh.jpg'%}" alt="">
-               <div class="centered img-text">Nhat Le Beach</div>
-            </div>
-         </div>
-         <div class="row row-row-2">
-            <div class="col  col-md-4">
-               <img class="img-row-2" id="brightness" src="{%static '/images/checkinhava.jpg'%}" alt="">
-               <div class="centered img-text">Hava Valley</div>
-            </div>
-            <div class="col  col-md-4">
-               <img class="img-row-2" id="brightness" src="{%static '/images/hang-kieu.jpg'%}" alt="">
-               <div class="centered img-text">Kieu Cave</div>
-            </div>
-            <div class="col  col-md-4">
-               <img class="img-row-2" id="brightness" src="{%static '/images/Phong-nha-cave2.jpeg'%}" alt="">
-               <div class="centered img-text">Phong Nha Cave</div>
-            </div>
+   <form action="{% url 'rooms' %}" method="GET">
+      <div class="search-wrapper">
+        <div class="search-bar ">
+          <input type="text" name="tourist_place" placeholder="Search for accommodations...">
+          <button class="search-btn"><i class="fa fa-search"></i></button>
          </div>
       </div>
+    </form>
+    
+    
+
+
+   <!-- categories -->
+   <h2>Popular Destinations</h2>
+
+   <div class="row location">
+      <div class="line-1 col-md-6">
+         <a href="{% url 'rooms' %}?tourist_place=Mooc+Spring">
+            <img class="img-row-1" id="brightness" src="{%static '/images/suoi-nuoc-mooc.jpg'%}" alt="">
+            <div class="centered img-text">Mooc Spring</div>
+         </a>
+      </div>
+      <div class="line-2 col-md-6">
+         <a href="{% url 'rooms' %}?tourist_place__name=Nhat+Le+Beach">
+            <img class="img-row-1" id="brightness" src="{%static '/images/sun-spa-quangbinh.jpg'%}" alt="">
+            <div class="centered img-text">Nhat Le Beach</div>
+         </a>
+      </div>
    </div>
+   <div class="row row-row-2">
+      <div class="col col-md-4">
+         <a href="{% url 'rooms' %}?tourist_place=Hava+Valley">
+            <img class="img-row-2" id="brightness" src="{%static '/images/checkinhava.jpg'%}" alt="">
+            <div class="centered img-text">Hava Valley</div>
+         </a>
+      </div>
+      <div class="col col-md-4">
+         <a href="{% url 'rooms' %}?tourist_place=Kieu Cave">
+            <img class="img-row-2" id="brightness" src="{%static '/images/hang-kieu.jpg'%}" alt="">
+            <div class="centered img-text">Kieu Cave</div>
+         </a>
+      </div>
+      <div class="col col-md-4">
+         <a href="{% url 'rooms' %}?tourist_place=Phong+Nha+Cave">
+            <img class="img-row-2" id="brightness" src="{%static '/images/Phong-nha-cave2.jpeg'%}" alt="">
+            <div class="centered img-text">Phong Nha Cave</div>
+         </a>
+      </div>
+   </div>
+
    <!-- Ratting -->
    <section class="height-rate">
-      <h2 style="font-weight: bold;">High Rating Hotel</h2>
+      <h2>High Rating Hotel</h2>
       <div class="row rate">
          <div class="col-md-12 not">
-            <div class="tab">
-               <button class="tablinks btn-warning" onclick="openTab(event, 'hotel')"><strong>Hotel Rooms</strong></button>
-                <button class="tablinks btn-warning" onclick="openTab(event, 'homestay')"><strong>Homestay Rooms</strong></button>
-            </div>
-             
+
+
             <div id="hotel" class="tabcontent active">
                <!-- content for hotel rooms -->
-               
-                  {% for room in top_hotel_rooms %}
-                    <!-- display homestay room details here -->
-                     <div class="col-md-3">
-                        <div class="room-card left-margin">
-                        <h3 class="hotel_name"><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a></h3>
-         
-                        <div class="room-image-wrapper">
-                           <img src="{{ room.images }}" style="object-fit: contain;">
-                           {% if room.discount %}
-                             <div class="discount-badge">
-                               {{ room.discount }}% OFF
-                             </div>
-                           {% endif %}
-                        </div>
-         
-                        <p>{% for i in '12345' %}
-                           {% if i|floatformat:0 <= room.average_rating|floatformat:0 %}
-                              <span class="star">&#9733;</span>
-                           {% else %}
-                              <span class="empty-star">&#9734;</span>
-                           {% endif %}
-                           {% endfor %}  ({{ room.countreview }} user)</p>
-                     
-                        {% if room.discount %}
-                        <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price }}/room/night</p>
-                        <p class="price">${{ room.discounted_price }}/room/night</p>
-                        {% else %}
-                              <p class="price">Price: ${{ room.price }}/room/night</p>
-                        {% endif %}
-                        
-                        </div>
-                     </div>
-                  {% endfor %}
-                  <div class="col-3 centered" style="margin-top:38px;">
-                     <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
-                  </div>
-            </div>
-             
-            <div id="homestay" class="tabcontent">
-               <!-- content for homestay rooms -->
-               {% for room in top_homestay_rooms %}
-                 <!-- display hotel room details here -->
-                 <div class="col-md-3">
+
+               {% for room in top_hotel_rooms %}
+               <!-- display homestay room details here -->
+               <div class="col-md-3">
                   <div class="room-card left-margin">
-                     <h3 class="hotel_name"><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a></h3>
-      
+                     <h3 class="hotel_name"><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a>
+                     </h3>
+
                      <div class="room-image-wrapper">
                         <img src="{{ room.images }}" style="object-fit: contain;">
                         {% if room.discount %}
-                          <div class="discount-badge">
-                            {{ room.discount }}% OFF
-                          </div>
+                        <div class="discount-badge">
+                           {{ room.discount }}% OFF
+                        </div>
                         {% endif %}
                      </div>
-      
+
                      <p>{% for i in '12345' %}
-                        {% if i|floatformat:0 <= room.average_rating|floatformat:0 %}
-                           <span class="star">&#9733;</span>
-                        {% else %}
+                        {% if i|floatformat:0 <= room.average_rating|floatformat:0 %} <span class="star">&#9733;</span>
+                           {% else %}
                            <span class="empty-star">&#9734;</span>
-                        {% endif %}
-                        {% endfor %}  ({{ room.countreview }} user)</p>
-                  
+                           {% endif %}
+                           {% endfor %} ({{ room.countreview }} user)</p>
+
                      {% if room.discount %}
-                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price }}/room/night</p>
+                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price
+                        }}/room/night</p>
                      <p class="price">${{ room.discounted_price }}/room/night</p>
                      {% else %}
-                           <p class="price">Price: ${{ room.price }}/room/night</p>
+                     <p class="price">Price: ${{ room.price }}/room/night</p>
                      {% endif %}
-                     
+
                   </div>
                </div>
                {% endfor %}
-               <div class="col-3 centered" style="margin-top:38px;">
-                  <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
-               </div>
-            </div>
-             
-         </div>
-       </div>
 
-   </section>
-   <!-- Comment -->
-   <!-- <div class="communicate-connect">
-      <p>communicate_connect</p>
-   </div> -->
-   <section class="destination-list">
-      <h2>Popular Destinations</h2>
-      <div class="row">
-         <div class="col-md-4">
-            <a href="#">
-               <div class="destination-card">
-                  <img src="https://example.com/destination1.jpg" alt="Destination 1">
-                  <h3>Destination 1</h3>
-                  <p>5 hotels nearby</p>
-               </div>
-            </a>
+            </div>
+
+
+
          </div>
-         <div class="col-md-4">
-            <a href="#">
-               <div class="destination-card">
-                  <img src="https://example.com/destination2.jpg" alt="Destination 2">
-                  <h3>Destination 2</h3>
-                  <p>7 hotels nearby</p>
-               </div>
-            </a>
-         </div>
-         <div class="col-md-4">
-            <a href="#">
-               <div class="destination-card">
-                  <img src="https://example.com/destination3.jpg" alt="Destination 3">
-                  <h3>Destination 3</h3>
-                  <p>3 hotels nearby</p>
-               </div>
-            </a>
+         <div class="col-3 centered" style="margin-top:38px;">
+            <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
          </div>
       </div>
+
+
    </section>
-   
-   
-    
-    
+
+   <!-- Homestay rating -->
+   <section class="height-rate-homestay">
+      <h2>High Rating Homestay</h2>
+      <div class="row rate">
+         <div class="col-md-12 not">
+            <div id="hotel" class="tabcontent active ">
+
+               <!-- content for homestay rooms -->
+               {% for room in top_homestay_rooms %}
+               <!-- display hotel room details here -->
+               <div class="col-md-3">
+                  <div class="room-card left-margin">
+                     <h3 class="hotel_name"><a href="{% url 'room-profile' room.number %}">{{ room.hotel_name }}</a>
+                     </h3>
+
+                     <div class="room-image-wrapper">
+                        <img src="{{ room.images }}" style="object-fit: contain;">
+                        {% if room.discount %}
+                        <div class="discount-badge">
+                           {{ room.discount }}% OFF
+                        </div>
+                        {% endif %}
+                     </div>
+
+                     <p>{% for i in '12345' %}
+                        {% if i|floatformat:0 <= room.average_rating|floatformat:0 %} <span class="star">&#9733;</span>
+                           {% else %}
+                           <span class="empty-star">&#9734;</span>
+                           {% endif %}
+                           {% endfor %} ({{ room.countreview }} user)</p>
+
+                     {% if room.discount %}
+                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price
+                        }}/room/night</p>
+                     <p class="price">${{ room.discounted_price }}/room/night</p>
+                     {% else %}
+                     <p class="price">Price: ${{ room.price }}/room/night</p>
+                     {% endif %}
+
+                  </div>
+               </div>
+               {% endfor %}
+
+            </div>
+
+         </div>
+         <div class="col-3 centered" style="margin-top:38px;">
+            <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
+         </div>
+
+      </div>
+
+   </section>
+
+
+
+
+
 </div>
 
 <script>
-   function openTab(event, tabName) {
-      var i, tabcontent, tablinks;
-   tabcontent = document.getElementsByClassName("tabcontent");
-   for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].classList.remove("active");
-   }
-   tablinks = document.getElementsByClassName("tablinks");
-   for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].classList.remove("active");
-   }
-   document.getElementById(tabName).classList.add("active");
-   evt.currentTarget.classList.add("active");
-     document.getElementById("hotel-tab").click();
-   }
-   </script>
-   
+   // function openTab(event, tabName) {
+   //    var i, tabcontent, tablinks;
+   // tabcontent = document.getElementsByClassName("tabcontent");
+   // for (i = 0; i < tabcontent.length; i++) {
+   //    tabcontent[i].classList.remove("active");
+   // }
+   // tablinks = document.getElementsByClassName("tablinks");
+   // for (i = 0; i < tablinks.length; i++) {
+   //    tablinks[i].classList.remove("active");
+   // }
+   // document.getElementById(tabName).classList.add("active");
+   // evt.currentTarget.classList.add("active");
+   //   document.getElementById("hotel-tab").click();
+   // }
+
+
+</script>

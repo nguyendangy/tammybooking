@@ -17,3 +17,12 @@ ngày 28/4/2023 thêm chức năng huỷ đặt phòng
 ngày 1/5/2023 + sửa lại trang chủ
 - [x] Thêm nút đặt phòng ngay thì vào trang rôm book ở trong chổ chi tiết phòng, nếu chưa đặt phòng này, 
 - [x] sửa bookings, phần link của khách sạn bị hỏng
+Ngày 2/5
+- [x] sửa theo em yêu cầu ở file
+- [x] Thêm phòng có địa điểm gần đây. là ok, nhấn vào ảnh ở trang chủ sẽ ra
+- [x] Nearby Places thay nội dung bằng TouristPlace
+- [x] Hiển thị danh sách các địa danh theo khách sạn ở trang chủ theo , touristplace có thêm nhiều sự lựa chọn xem,  
+- [x] lỗi nhập tên hotel ở room, chọn filter
+- [x] Thêm xem phòng ở book
+- [x] sửa lại chữ xem thêm ở đành giá cao
+- [x] Thêm lọc địa điểm du lịch cho rooms

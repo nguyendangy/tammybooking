@@ -46,10 +46,10 @@ def guest_home(request, pk):
     reviews = Review.objects.all()
     # top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
     # Lấy danh sách 4 phòng khách sạn có điểm đánh giá cao nhất
-    top_hotel_rooms = Room.objects.filter(roomType='King').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+    top_hotel_rooms = Room.objects.filter(roomType='Hotel').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
 
     # Lấy danh sách 4 phòng homestay có điểm đánh giá cao nhất
-    top_homestay_rooms = Room.objects.filter(roomType='Vip').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+    top_homestay_rooms = Room.objects.filter(roomType='HomeStay').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
 
 
     context = {

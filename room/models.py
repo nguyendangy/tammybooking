@@ -20,6 +20,9 @@ class TouristPlace(models.Model):
     photo = models.ImageField(upload_to='tourist_place_images/')
     description = models.TextField()
     distance_from_room = models.FloatField()
+
+    def __str__(self):
+        return self.name
     
 class Room(models.Model):
     ROOM_TYPES = (
@@ -66,7 +69,8 @@ class Room(models.Model):
     discount = models.FloatField(default=0.0)
 
     images = models.ImageField(upload_to='room_images/', blank=True)
-    tourist_place = models.ForeignKey(TouristPlace, on_delete=models.CASCADE, null=True)
+    # tourist_place = models.ForeignKey(TouristPlace, on_delete=models.CASCADE, null=True)
+    tourist_place = models.ManyToManyField(TouristPlace)
 
     def discounted_price(self):
         if self.discount:

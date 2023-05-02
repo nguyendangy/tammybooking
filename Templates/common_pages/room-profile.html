@@ -97,52 +97,52 @@
                 <div class="p-2 h4">
                     <h2>{{room.hotel_name}}</h2>
                 </div>
-                <div class="p-2 h4">
-                    <h2 style="font-size: 1rem; color: gray;"><i class="fas fa-map-marker-alt"></i> {{room.address}}</h2>
+                <div class="p-2">
+                    <h2 style="font-size: 1rem; color: gray; margin-top:-5px;"><i class="fas fa-map-marker-alt"></i> {{room.address}}</h2>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Room Number:</span>
                     <span class="font-weight-normal">{{room.number}}</span>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Number Of Beds:</span>
                     <span class="font-weight-normal">{{room.numberOfBeds}}</span>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Price:</span>
                     <span class="font-weight-normal">{{room.price}}</span>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Discount percent:</span>
                     <span class="font-weight-normal">{{room.discount}}% OFF</span>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Discount Price:</span>
                     <span class="font-weight-normal">{{room.discounted_price}}</span>
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Room Type:</span>
                     <span class="font-weight-normal">{{ room.roomType }}</span>
 
                 </div>
 
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Capacity: </span>
                     <span class="font-weight-normal">{{room.capacity}}</span>
 
                 </div>
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Room Utilities: </span>
                     <span class="font-weight-normal">{{room.room_include}}</span>
 
                 </div>
-                <div class="p-2 h4">
+                <div class="p-2 h5">
                     <span>Average Rating: </span>
                     <span class="font-weight-normal"> {{ average_rating|floatformat:1 }} - ({{ review_count }}
                         reviews)</span>
@@ -150,20 +150,19 @@
             </div>
 
             <div class="col-md-6">
+
+                <div class="p-2 h5">
+                    <img src="{{ room.images }}" alt="" class="img-fluid" style="border-radius: 10px;">
+                </div>
+
                 {% if role == 'guest' %}
-                <div class="p-2 h4 " style="align-content:center; width: 120px; margin-top:30px;" >
+                <div class="p-2 h5">
                     <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>Book Now</strong> </a>
                 </div>
                 {% endif %}
 
-                <div class="p-2 h4">
-                    <img src="{{ room.images }}" alt="" class="img-fluid" style="border-radius: 10px;">
-                </div>
-
-
-
                 {% if role == "manager" or role == "admin" %}
-                <div class="p-2 h4 ">
+                <div class="p-2 h5">
                     <form action="" method="POST">
                         {% csrf_token %}
                         <input type="date" placeholder="Enter Start Date" name="bsd" required
@@ -205,12 +204,12 @@
                 <div class="p-2 h4 border p-3 mt-3" style="border-radius: 10px;">
                     <div class="row">
                         <div class="col-md-6 d-flex">
-                            <span class="star yellow"><strong>Rating</strong> &#9733;&#9733;&#9733;&#9733;&#9733; </span>
+                            <span class="star yellow h3"><strong>Rating</strong> &#9733;&#9733;&#9733;&#9733;&#9733; </span>
                         </div>
-                        <div class="col-md-6 text-right ">
+                        <div class="col-md-6 text-right">
                             {% if role == 'guest'%}
                             {% if bookings3 %}
-                            <a href="{% url 'room-review' room.number %}" class="btn btn-warning">Write review</a>
+                            <a href="{% url 'room-review' room.number %}" class="btn btn-warning"><strong>Write Review </strong></a>
                             {% else %}
                             Please make a reservation for review
                             {% endif %}
@@ -243,7 +242,7 @@
                     </div>
                     
                     {% for review in reviews %}
-                    <div class="font-weight-normal border p-3 mt-3" style="border-radius: 10px;">
+                    <div class="font-weight-normal border p-3 mt-3 h4" style="border-radius: 10px;">
                         <strong>
                             <p>{{ review.user }}
                         </strong> wrote a review {{ review.created_at|date:"d/m/Y" }}</p>
