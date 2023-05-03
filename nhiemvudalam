@@ -26,3 +26,17 @@ Ngày 2/5
 - [x] Thêm xem phòng ở book
 - [x] sửa lại chữ xem thêm ở đành giá cao
 - [x] Thêm lọc địa điểm du lịch cho rooms
+ngày 3/5
+- [x] đổi trang chủ trước rồi mới đăng nhập,
+- [x] Cho phép k đăng nhập ở các màn hình sau: rooms, trang chủ(guest home), xem phòng(room-profile), khi truy cập vào các trang còn lại nếu chưa đăng nhập sẽ truy cập Trang login
+- [x] See more của hotel và homestay phải truyền vào tham số
+- [x] Thêm message cho tourist_place trang của nó,
+- [x] sửa $$ thành usd
+- [x] sửa lại kích thước ảnh ở trang chủ, sửa lại all ảnh tải lên cho đẹp, kích thước tải lên phải vuông
+- [x] xoá url sau dấu ? để xoá bộ lọc lại của rôm
+bổ sung đợt 2 
+- [x] Thêm nút trang chủ ở phần login
+- [x] sửa menu cho thằng not user, nhiều leń
+- [x] sửa footer treo cao xấu xí
+- [x] Chi tiết đặt phòng container thành main…tương tự cho payment,
+- [x] Hotel policy xấu xí

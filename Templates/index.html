@@ -2,12 +2,15 @@
 
 <body>
     {% include 'incs/nav.html' %}
-    {% if role == 'guest' %}
+    {% if role == 'guest' or  role == "not_user" %}
         <style>
             body {
-            margin-top: 80px;
+            margin-top: 70px;
             }
         </style>
+
+    
+
     {% endif %}
 
     {% block context %}

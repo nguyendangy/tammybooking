@@ -17,51 +17,78 @@ from hotel.models import *
 from .forms import *
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home(request):
-    role = str(request.user.groups.all()[0])
-    print("role: ", role)
-    if role != "guest":
-        return redirect("employee-profile", pk=request.user.id)
+    if request.user.is_authenticated:
+        role = str(request.user.groups.all()[0])
+        print("role: ", role)
+        if role != "guest":
+            return redirect("employee-profile", pk=request.user.id)
+        else:
+            return redirect("guest-home",pk=request.user.id)
     else:
-        return redirect("guest-home",pk=request.user.id)
+        role = "not_user"
+        if role == "not_user":
 
-@login_required(login_url='login')
-def guest_home(request, pk):
-    tempUser = User.objects.get(id=pk)
-    guest = Guest.objects.get(user=tempUser)
-
-    if request.method == 'POST':
-        tempUser.first_name = request.POST.get("first_name")
-        tempUser.last_name = request.POST.get("last_name")
-        guest.phoneNumber = request.POST.get("phoneNumber")
-        tempUser.save()
-        guest.save()
-        return redirect("home")
-    role = str(request.user.groups.all()[0])
-    path = role + "/"
-
-    eventAttendees = EventAttendees.objects.filter(guest=guest)
-    bookings = Booking.objects.filter(guest=guest)
-    reviews = Review.objects.all()
-    # top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
-    # Lấy danh sách 4 phòng khách sạn có điểm đánh giá cao nhất
-    top_hotel_rooms = Room.objects.filter(roomType='Hotel').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
-
-    # Lấy danh sách 4 phòng homestay có điểm đánh giá cao nhất
-    top_homestay_rooms = Room.objects.filter(roomType='HomeStay').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+        # Handle the case for non-authenticated users here
+            return redirect("guest-home", pk = None)
 
 
-    context = {
-        "role": role,
-        "guest": guest,
-        "eventAttendees": eventAttendees,
-        "bookings": bookings,
-        "reviews": reviews,
-        'top_homestay_rooms': top_homestay_rooms,
-        'top_hotel_rooms': top_hotel_rooms,
-    }
-    return render(request, path + "guest-home.html", context)
+# @login_required(login_url='login')
+def guest_home(request, pk=None):
+   
+    if request.user.is_authenticated:
+
+        tempUser = User.objects.get(id=pk)
+        guest = Guest.objects.get(user=tempUser)
+
+        if request.method == 'POST':
+            tempUser.first_name = request.POST.get("first_name")
+            tempUser.last_name = request.POST.get("last_name")
+            guest.phoneNumber = request.POST.get("phoneNumber")
+            tempUser.save()
+            guest.save()
+            return redirect("home")
+        role = str(request.user.groups.all()[0])
+        path = role + "/"
+
+        eventAttendees = EventAttendees.objects.filter(guest=guest)
+        bookings = Booking.objects.filter(guest=guest)
+        reviews = Review.objects.all()
+        # top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+        # Lấy danh sách 4 phòng khách sạn có điểm đánh giá cao nhất
+        top_hotel_rooms = Room.objects.filter(roomType='Hotel').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+
+        # Lấy danh sách 4 phòng homestay có điểm đánh giá cao nhất
+        top_homestay_rooms = Room.objects.filter(roomType='HomeStay').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+
+
+        context = {
+            "role": role,
+            "guest": guest,
+            "eventAttendees": eventAttendees,
+            "bookings": bookings,
+            "reviews": reviews,
+            'top_homestay_rooms': top_homestay_rooms,
+            'top_hotel_rooms': top_hotel_rooms,
+        }
+        return render(request, path + "guest-home.html", context)
+    else:
+        role = "not_user"
+        path = role + "/"
+        # Xử lý cho trường hợp người dùng chưa đăng nhập vào trang guest_home
+        top_hotel_rooms = Room.objects.filter(roomType='Hotel').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+        top_homestay_rooms = Room.objects.filter(roomType='HomeStay').annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+        # reviews = Review.objects.all()
+        
+        context = {
+            'top_homestay_rooms': top_homestay_rooms,
+            'top_hotel_rooms': top_hotel_rooms,
+            "role": role,
+            # 'reviews': reviews,
+        }
+        return render(request, path + "guest-home.html", context)
+
 
 # @login_required(login_url='login')
 # def pre_book(request):

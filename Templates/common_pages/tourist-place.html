@@ -1,4 +1,11 @@
-<div class="container py-5 clearfix">
+<div class="main-page py-4">
+  <div id="messages">
+    {% for m in messages %}
+    <div class="alert alert-{{m.tags}}">
+        {{m}}
+    </div>
+    {% endfor %}
+</div>
   <h2>Tourist Places</h2>
 {% if role != 'guest' %}
 <a href="{% url 'add-tourist-place' %}" class="btn btn-primary">Add Tourist Place</a>

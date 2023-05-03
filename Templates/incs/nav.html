@@ -109,7 +109,7 @@
 
 
 </style>
-{% if role == 'guest' %}
+{% if role == 'guest'%}
 
                     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
                       <a class="navbar-brand" href="{% url 'guest-home'  request.user.guest.user.id %}">
@@ -121,7 +121,7 @@
                         <span class="navbar-toggler-icon"></span>
                       </button>
                       <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto">
                           {% if role == 'guest' %}
                           <li class="nav-item">
                             <a class="nav-link" href="{% url 'announcements' %}">Announcements</a>
@@ -146,7 +146,7 @@
                           {% endif %}
                         </ul>
                         {% if user.is_authenticated %}
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav ml-auto">
                           <li class="nav-item">
                             <a class="nav-link"  href="{% url 'guest-profile' user.id %}">{{ user.username }}</a>
 
@@ -156,7 +156,7 @@
                           </li>
                         </ul>
                         {% else %}
-                        <ul class="navbar-nav">
+                        <ul class="navbar-nav ml-auto">
                           <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">Login</a>
                           </li>
@@ -169,6 +169,64 @@
                 </nav>
                   
 
+                {% elif role == "not_user"%}
+
+                <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+                    <a class="navbar-brand" href="{% url 'guest-home' pk=None %}">
+                        <img src="/media/logo.png" height="60" alt="">
+                    </a>
+
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto">
+                            
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'announcements' %}">Announcements</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'rooms' %}">Book Room</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'current-room-services' %}">Services</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'events' %}">Events</a>
+                            </li>
+                            {% if request.user.guest.user.id != None %}
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'my-room' %}">My Bookings</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'hotel-policy' %}">Hotel Policy</a>
+                            </li>
+                            
+                          </ul>
+                      {% if user.is_authenticated %}
+                      <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                          <a class="nav-link"  href="{% url 'guest-profile' user.id %}">{{ user.username }}</a>
+
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                      </ul>
+                      {% else %}
+                      <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                      </ul>
+                      {% endif %}
+                    </div>
+              </nav>
                 {% else %}
 <!--Admin Navbar-->
 <nav class="navbar navbar-dark bg-dark navbar-expand-lg py-3 " role="navigation">

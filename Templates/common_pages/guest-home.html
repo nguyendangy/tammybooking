@@ -295,7 +295,7 @@
 
    /* goi y search */
 </style>
-<div class="main-page">
+<div class="main-page py-4">
 
    <form action="{% url 'rooms' %}" method="GET">
       <div class="search-wrapper">
@@ -381,11 +381,11 @@
                            {% endfor %} ({{ room.countreview }} user)</p>
 
                      {% if room.discount %}
-                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price
-                        }}/room/night</p>
-                     <p class="price">${{ room.discounted_price }}/room/night</p>
+                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">
+                        {{ room.price}}USD/room/night</p>
+                     <p class="price">{{ room.discounted_price }}USD/room/night</p>
                      {% else %}
-                     <p class="price">Price: ${{ room.price }}/room/night</p>
+                     <p class="price">Price: {{ room.price }}USD/room/night</p>
                      {% endif %}
 
                   </div>
@@ -394,12 +394,11 @@
 
             </div>
 
-
-
          </div>
          <div class="col-3 centered" style="margin-top:38px;">
-            <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
+            <a class="btn btn-warning w-100" href="{% url 'rooms' %}?type=Hotel"> <strong>See More</strong> </a>
          </div>
+
       </div>
 
 
@@ -437,11 +436,11 @@
                            {% endfor %} ({{ room.countreview }} user)</p>
 
                      {% if room.discount %}
-                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">${{ room.price
-                        }}/room/night</p>
-                     <p class="price">${{ room.discounted_price }}/room/night</p>
+                     <p class="general-price" style="text-decoration: line-through; font-size: 16px;">
+                        {{ room.price }}USD/room/night</p>
+                     <p class="price">{{ room.discounted_price }}USD/room/night</p>
                      {% else %}
-                     <p class="price">Price: ${{ room.price }}/room/night</p>
+                     <p class="price">Price: {{ room.price }}USD/room/night</p>
                      {% endif %}
 
                   </div>
@@ -452,7 +451,7 @@
 
          </div>
          <div class="col-3 centered" style="margin-top:38px;">
-            <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>See More</strong> </a>
+            <a class="btn btn-warning w-100" href="{% url 'rooms' %}?type=HomeStay"> <strong>See More</strong> </a>
          </div>
 
       </div>

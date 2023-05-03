@@ -1,5 +1,5 @@
 <style>
-    img {
+    td img {
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 5px;
@@ -12,7 +12,7 @@ td {
       }
 
 </style>
-<div class="container py-5 clearfix">
+<div class="clearfix main-page">
     <div id="messages">
         {% for m in messages %}
         <div class="alert alert-{{m.tags}}">
@@ -133,7 +133,7 @@ td {
                 </td>
                 {% if role == 'manager' or role == 'admin' %}<td> <a href="{% url 'room-edit' room.number %}"
                         class="btn btn-sm btn-primary w-100">Edit&nbsp;Room</a></td> {% endif %}
-                {% if role == "guest" or role == "receptionist" %}
+                {% if role == "guest" or role == "receptionist" or role == "not_user"%}
                 <td>
                     <form action="{% url 'booking-make' %}" method="POST">
                         {% csrf_token %}
@@ -155,7 +155,8 @@ td {
 <script>
     function clearAllInputsAndSubmit() {
         document.getElementById("roomFilterForm").reset();
+        window.history.replaceState({}, document.title, window.location.href.split('?')[0]);
         document.getElementById("roomFilterForm").submit();
     }
-    </script>
+</script>
     

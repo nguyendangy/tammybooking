@@ -30,13 +30,18 @@ from django.dispatch import receiver
 from django.core.files.storage import default_storage
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def rooms(request):
-    role = str(request.user.groups.all()[0])
+    if request.user.is_authenticated:
+        role = str(request.user.groups.all()[0])
+    else:
+        role = "not_user"
     path = role + "/"
     firstDayStr = None
     lastDateStr = None
+    type = request.GET.get('type')         
     tourist_place = request.GET.get('tourist_place')
+
     if tourist_place:
         rooms = Room.objects.filter(tourist_place__name__icontains=tourist_place)
         context = {
@@ -45,6 +50,19 @@ def rooms(request):
             'fd': firstDayStr,
             'ld': lastDateStr,
             "tourist_place": tourist_place
+
+        }
+        return render(request, path + "rooms.html", context)
+
+    
+    elif type:
+        rooms = Room.objects.filter(roomType__icontains=type)
+        context = {
+            "role": role,
+            'rooms': rooms,
+            'fd': firstDayStr,
+            'ld': lastDateStr,
+            "type": type
 
         }
         return render(request, path + "rooms.html", context)
@@ -240,9 +258,12 @@ def hotel_policy(request):
     return render(request, path + "hotel-policy.html", context)
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def room_profile(request, pk):
-    role = str(request.user.groups.all()[0])
+    if request.user.is_authenticated:
+        role = str(request.user.groups.all()[0])
+    else:
+        role = "not_user"
     path = role + "/"
     user = request.user
     print("pk: ", pk)
@@ -738,7 +759,7 @@ def edit_tourist_place(request,pk):
 
             # Save updated Room object to database
             room.save()
-            messages.success(request, 'Room updated successfully.')
+            messages.success(request, 'Tourist place updated successfully.')
             return redirect('tourist-place')
     else:
         form = editTouristPlaceForm(instance=tourist_place)
@@ -755,6 +776,8 @@ def delete_tourist_place(request, pk):
     tourist_place = TouristPlace.objects.get(pk=pk)
     if request.method == "POST":
         tourist_place.delete()
+        messages.success(request, 'Tourist place deleted successfully.')
+
         return redirect('tourist-place')
     context = {
         "role": role,

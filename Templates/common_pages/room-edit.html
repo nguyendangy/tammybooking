@@ -66,8 +66,10 @@
 
     </div>
 </div> -->
+<div class="main-page py-4">
 <form method="POST" class="form-container" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Update</button>
 </form>
+</div>
