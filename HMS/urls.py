@@ -87,8 +87,13 @@ urlpatterns = [
     path('deleteEvent/<str:pk>/', deleteEvent, name="deleteEvent"),
     path('deleteAnnouncement/<str:pk>/',
          deleteAnnouncement, name="deleteAnnouncement"),
+
+    path('edit-announcement/<str:pk>/', edit_Announcement, name="edit-announcement"),
+    
     path('deleteBooking/<str:pk>/', deleteBooking, name="deleteBooking"),
     path('completeTask/<str:pk>/', completeTask, name="completeTask"),
+
+
 ]
 
 if settings.DEBUG:
