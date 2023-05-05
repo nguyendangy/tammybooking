@@ -22,7 +22,7 @@ td {
     </div>
     <div class="clearfix">
         {% if role == "manager" or role == "admin" %}
-        <a href="{% url 'add-room' %}" class="btn btn-danger rounded float-right">Add Room <i
+        <a href="{% url 'add-room' %}" class="btn btn-outline-success rounded float-right">Add Room <i
                 class="fas fa-plus"></i></a>
         {% endif %}
     </div>
@@ -132,7 +132,7 @@ td {
                 <td> <a href="{% url 'room-profile' room.number %}" class="btn btn-info btn-sm w-100">View</a>
                 </td>
                 {% if role == 'manager' or role == 'admin' %}<td> <a href="{% url 'room-edit' room.number %}"
-                        class="btn btn-sm btn-primary w-100">Edit&nbsp;Room</a></td> {% endif %}
+                        class="btn btn-sm btn-outline-primary w-100">Edit&nbsp;Room</a></td> {% endif %}
                 {% if role == "guest" or role == "receptionist" or role == "not_user"%}
                 <td>
                     <form action="{% url 'booking-make' %}" method="POST">
@@ -140,7 +140,7 @@ td {
                         <input type="hidden" value="{{ room }}" name="roomid">
                         <input type="date" value="{{fd}}" name="fd" class="d-none">
                         <input type="date" value="{{ld}}" name="ld" class="d-none">
-                        <button type="submit" name="book" id="book" class="btn btn-sm btn-primary px-3">Book</button>
+                        <button type="submit" name="book" id="book" class="btn btn-sm btn-outline-primary px-3">Book</button>
                     </form>
                 </td>
                 {% endif %}

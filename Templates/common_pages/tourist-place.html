@@ -1,5 +1,10 @@
+<style>
+  td {
+  vertical-align: middle!important;
+}
+</style>
 <div class="main-page py-4">
-  <div id="messages">
+  <div id="messages"> 
     {% for m in messages %}
     <div class="alert alert-{{m.tags}}">
         {{m}}
@@ -8,7 +13,7 @@
 </div>
   <h2>Tourist Places</h2>
 {% if role != 'guest' %}
-<a href="{% url 'add-tourist-place' %}" class="btn btn-primary">Add Tourist Place</a>
+<a href="{% url 'add-tourist-place' %}" class="btn btn-outline-success">Add Tourist Place</a>
 {% endif %}
 <table class="table">
   <thead>
@@ -25,16 +30,16 @@
     {% for place in tourist_places %}
       <tr>
         <td>{{ place.name }}</td>
-        <td><img src="{{ place.photo.url }}" alt="{{ place.name }}" height="50"></td>
+        <td><img src="{{ place.photo.url }}" alt="{{ place.name }}"  width ="120" height="auto"></td>
         <td>{{ place.description }}</td>
         <td>{{ place.distance_from_room }}</td>
         {% if role != 'guest' %}
         <td>
-          <a href="{% url 'edit-tourist-place' place.id %}" class="btn btn-primary btn-sm">Edit</a>
+          <a href="{% url 'edit-tourist-place' place.id %}" class="btn btn-outline-primary ">Edit</a>
           <form action="{% url 'delete-tourist-place' place.id %}" method="post" class="d-inline">
             {% csrf_token %}
             <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+            <button type="submit" class="btn btn-danger " onclick="return confirm('Are you sure?')">Delete</button>
           </form>
         </td>
         {% endif %}

@@ -41,7 +41,7 @@ def rooms(request):
     lastDateStr = None
     type = request.GET.get('type')         
     tourist_place = request.GET.get('tourist_place')
-
+    hotel_name = request.GET.get('hotel_name')
     if tourist_place:
         rooms = Room.objects.filter(tourist_place__name__icontains=tourist_place)
         context = {
@@ -53,7 +53,18 @@ def rooms(request):
 
         }
         return render(request, path + "rooms.html", context)
+    
+    elif hotel_name:
+        rooms = Room.objects.filter(hotel_name__icontains=hotel_name)
+        context = {
+            "role": role,
+            'rooms': rooms,
+            'fd': firstDayStr,
+            'ld': lastDateStr,
+            "hotel_name": hotel_name
 
+        }
+        return render(request, path + "rooms.html", context)
     
     elif type:
         rooms = Room.objects.filter(roomType__icontains=type)

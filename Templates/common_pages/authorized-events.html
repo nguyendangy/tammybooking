@@ -45,7 +45,7 @@
                 <td>{{ event.endDate }}</td>
                 <td> <a href="{% url 'event-profile' event.id %}" class="btn btn-sm btn-info px-3">View</a></td>
                 {% if role == "manager" or role == "admin" %}
-                <td> <a href="{% url 'event-edit' event.id %}" class="btn btn-sm btn-primary px-3">Edit</a></td>
+                <td> <a href="{% url 'event-edit' event.id %}" class="btn btn-sm btn-outline-primary px-3">Edit</a></td>
                 <td> <a href="{% url 'deleteEvent' event.id %}" class="btn btn-sm btn-danger px-3">Delete</a> </td>
                 {% endif %}
                 {% if role == 'guest' %}
@@ -53,7 +53,7 @@
                     <form action="{% url 'events' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{ event.id }}" name="id">
-                        <button type="submit" name="attend" class="btn btn-sm btn-primary px-3">Attend</button>
+                        <button type="submit" name="attend" class="btn btn-sm btn-outline-primary px-3">Attend</button>
                     </form>
                 </td>
                 {% endif %}

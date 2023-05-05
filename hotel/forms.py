@@ -31,6 +31,12 @@ class createAnnouncementForm(ModelForm):
         model = Announcement
         fields = '__all__'
 
+class editAnnouncementForm(ModelForm):
+    class Meta:
+        model = Announcement
+        fields =["content", "sender",
+                  "date"]
+
 
 class createItem(ModelForm):
     class Meta:

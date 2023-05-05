@@ -67,14 +67,17 @@
                 {% if role == "guest" %}
 
                 <form action="{% url 'request-refund' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" value="{{ b.id }}" name="bookingsId">
-                    {% if b.startDate > now %}
-                    <td><button type="submit" class="btn btn-outline-success btn-lg" name="refReq">Send Cancellation
-                            Request</button></td>
-                    {% else %}
-                    <td><span class="text-danger"> Cancellation not possible after start date.</span></td>
-                    {% endif %}
+                {% csrf_token %}
+                <input type="hidden" value="{{ b.id }}" name="bookingsId">
+                {% if b.startDate <= now %}
+                <td><button type="submit" class="btn btn-outline-success btn-lg" id="write-review-btn" >Send Cancellation
+                    Request</button></td>
+                
+                {% else %}
+                <td><button type="submit" class="btn btn-outline-success btn-lg" name="refReq">Send Cancellation
+                    Request </button></td>
+                
+                {% endif %}
                 </form>
                 
                 {% endif %}
@@ -89,3 +92,19 @@
 
 
 </div>
+<script>
+    // Lấy thẻ nút "Write Review" bằng id
+    const writeReviewBtns = document.querySelectorAll('#write-review-btn');
+    
+    // Gán sự kiện cho nút
+    writeReviewBtns.forEach(function(btn) {
+    btn.addEventListener('click', function(event) {
+        // Ngăn chặn hành động mặc định của nút khi bấm vào
+        event.preventDefault();
+
+        // Thực hiện các hành động mà bạn muốn khi nút được bấm
+        alert('The cancellation date must be earlier than the check-in date');
+    });
+});
+</script>
+  

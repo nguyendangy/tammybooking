@@ -40,3 +40,12 @@ bổ sung đợt 2
 - [x] sửa footer treo cao xấu xí
 - [x] Chi tiết đặt phòng container thành main…tương tự cho payment,
 - [x] Hotel policy xấu xí
+5/5/2023
+- [x] sửa menu và footer của admin
+- [x] sửa thông báo, thêm phần edit vào màn hình thông báo với admin
+- [x] Khi nhấn vào xem ảnh của đánh giá thì k thoát ra được vì nút x bị vướng menu
+- [x] nút huỷ đặt phòng phải hiển thị và nếu người dùng bấm và thì check điều kiện và hiển thị dialog hoặc message
+- [x] Please make a reservation for reviewing sửa lại cho chính xác ở chi tiết phòng, nhấn vào hiện trang đăng nhập	
+- [x] About us thay vì policy xoá phần policy
+- [x] sửa background của footer thành màu xám
+- [x] lọc theo tên khách sạn ở trang chủ

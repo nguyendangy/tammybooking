@@ -1,0 +1,17 @@
+<!-- <div class="main-page py-4">
+      <h1>Edit Tourist Place</h1>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-primary">Save Changes</button>
+      </form>
+</div> -->
+
+<div class="main-page py-4">
+  <h1>Edit Tourist Place</h1>
+  <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit"  class="btn btn-outline-primary">Update</button>
+  </form>
+  </div>

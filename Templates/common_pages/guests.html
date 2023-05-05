@@ -80,7 +80,7 @@
                 <td>{{g.numOfDays}}</td>
                 <td>{{g.numOfLastBookingDays}}</td>
 
-                <td> <a href="{% url 'guest-profile' g.user.id %}" class="btn btn-primary w-100">View&nbsp;Guest</a>
+                <td> <a href="{% url 'guest-profile' g.user.id %}" class="btn btn-outline-primary w-100">View&nbsp;Guest</a>
                 </td>
             </tr>
             {% endfor %}
@@ -126,7 +126,7 @@
                     <td>{{g.numOfLastBookingDays}}</td>
 
                     <td> <a href="{% url 'guest-profile' g.user.id %}"
-                            class="btn btn btn-primary w-100">View&nbsp;Guest</a>
+                            class="btn btn btn-outline-primary w-100">View&nbsp;Guest</a>
                     </td>
                 </tr>
                 {% endfor %}

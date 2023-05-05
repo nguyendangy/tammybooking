@@ -37,7 +37,7 @@
                     <td><input type="number" step="1" value="{{s.quantitiy}}" name="quantitiy"></td>
                     <td><input type="hidden" step="1" value="{{s.id}}" name="id"></td>
 
-                    <th><button type="submit" class="btn btn-sm btn-primary w-100" name="save">Save</button></th>
+                    <th><button type="submit" class="btn btn-sm btn-outline-primary w-100" name="save">Save</button></th>
                     {% if role == "manager" or role == "admin" %}
                     <th> <a href="{% url 'deleteStorage' s.id %}" class="btn btn-sm btn-danger px-3">Delete</a> </th>
                     {% endif %}
@@ -84,7 +84,7 @@
                     id="item-quantity">
             </div>
 
-            <button type="submit" class="btn btn-primary px-5 float-right mb-5" name="add">Add</button>
+            <button type="submit" class="btn btn-outline-primary px-5 float-right mb-5" name="add">Add</button>
         </form>
 
     </div>

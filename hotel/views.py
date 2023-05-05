@@ -278,7 +278,7 @@ def event_edit(request, pk):
     return render(request, path + "event-edit.html", context)
 
 
-@ login_required(login_url='login')
+@login_required(login_url='login')
 def announcements(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
@@ -298,6 +298,7 @@ def announcements(request):
 
             announcement.save()
             return redirect('announcements')
+        
 
         if "filter" in request.POST:
             if (request.POST.get("id") != ""):
@@ -329,6 +330,29 @@ def announcements(request):
         return render(request, path + "announcements.html", context)
 
     return render(request, path + "announcements.html", context)
+
+@login_required(login_url='login')
+def edit_Announcement(request, pk):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+    announcements = Announcement.objects.get(id=pk)
+    
+    form1 = editAnnouncementForm(request.POST, instance=announcements)
+    if request.method == "POST":
+        if form1.is_valid():
+            form1.save()
+            messages.success(
+            request, 'Update success!')
+            return redirect("announcements")
+    else:
+        form1 = editAnnouncementForm(instance=announcements)
+
+    context = {
+        "role": role,
+        'announcements': announcements,
+        "form": form1
+    }
+    return render(request, path + "/edit-announcement.html", context)
 
 
 @login_required(login_url='login')

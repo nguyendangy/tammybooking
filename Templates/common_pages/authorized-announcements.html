@@ -25,7 +25,12 @@
 
                     <th>Announced Date<input type="date" class="form-control border border-secondary" name="date"
                             value="{{date}}"></th>
+                    {% if role == "manager" or role == "admin" %}
+                    <th colspan="2"><button type="submit" name="filter" class="btn btn-warning w-100">Filter</button></th>
+                    {% else %}
                     <th><button type="submit" name="filter" class="btn btn-warning w-100">Filter</button></th>
+                    {% endif %}
+
 
                 </form>
             </tr>
@@ -38,8 +43,10 @@
                 <td>{{announcement.sender.user.first_name}} {{announcement.sender.user.last_name}}</td>
                 <td>{{announcement.date}}</td>
                 {% if role == "manager" or role == "admin" %}
+                <td> <a href="{% url 'edit-announcement' announcement.id %}" class="btn btn-sm btn-outline-primary px-3">Edit</a></td>
                 <td> <a href="{% url 'deleteAnnouncement' announcement.id %}"
                         class="btn btn-sm btn-danger px-3">Delete</a> </td>
+                        
                 {% else %}
                 <td></td>
                 {% endif %}
