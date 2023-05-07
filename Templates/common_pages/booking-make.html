@@ -1,13 +1,16 @@
 <div class="main-page py-4">
+    <div class="col-sm-12 col-md-12 col-lg-4 mb-4">
+        <h2>Book Details</h2>
+    </div>
+    <div class="col-sm-12 col-md-12 col-lg-6">
 
-    <div class="row py-5 h5">
         <p>You are currently trying to book This room:
             <br>
             Between {{fd}} - {{ld}}
             <br>
             Hotel name : {{ room.hotel_name }}
             <br>
-            Room number : {{ room.number }}
+            Address : {{ room.address }}
             <br>
             Room capacity : {{ room.capacity }}
             <br>
@@ -23,13 +26,11 @@
                 Room price : {{ room.price }}
             {% endif %}
             <br>
-            <br>
-            Total price : {{total}}
         </p>
     </div>
 
 
-    <form action="" method="POST">
+    <form action="" method="POST" class="col-sm-12 col-md-12">
         {% csrf_token %}
         <div class=row>
             <input type="hidden" value="{{ room }}" name="roomid">
@@ -67,14 +68,18 @@
 
 
             
+            <div class="row col-sm-12 col-md-12 ">
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-success w-100 mt-3" name="bookGuestButton">Pay now</button>
+                </div>
+                <div class="col-md-6">
+                  <button type="submit" class="btn btn-info w-100 mt-3" name="bookGuestLaterButton">Pay later</button>
+                </div>
+            </div>
+              
 
-            <button type="submit" class="btn btn-info w-100 mt-3" name="bookGuestButton">Book</button>
         </div>
     </form>
 
-
-    <div class="py-3">
-        &nbsp
-    </div>
 
 </div>

@@ -530,18 +530,27 @@ def payment(request):
         subject = "Payment Verification"
         text = """ 
             Dear {guestName},
-            Please Copy Paste This Code in the verification Window:
-
-            {code}
+            Below is our bank account, please pay for booking.
+            Bui Thi Hong Tam
+            the bank number: XXXXXXXXXXX
 
             Please ignore this email, if you didn't initiate this transaction!
         """
+        # text = """ 
+        #     Dear {guestName},
+        #     Below is our bank account, please pay for booking.
+        #     Please Copy Paste This Code in the verification Window:
+
+        #     {code}
+
+        #     Please ignore this email, if you didn't initiate this transaction!
+        # """
         # placing the code and user name in the email bogy text
         email_text = text.format(
             guestName=receiver.user.first_name + " " + receiver.user.last_name, code=code)
 
         # seting up the email
-        message_email = 'dangysportsman@gmail.com'
+        message_email = ''
         message = email_text
         receiver_name = receiver.user.first_name + " " + receiver.user.last_name
 
@@ -572,21 +581,33 @@ def payment(request):
 def verify(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
-    if request.method == "POST":
-        tempCode = request.POST.get("tempCode")
-        if "verify" in request.POST:
-            realCode = request.POST.get("realCode")
+    # if request.method == "POST":
+    #     tempCode = request.POST.get("tempCode")
+    #     if "verify" in request.POST:
+    #         realCode = request.POST.get("realCode")
 
-            if realCode == tempCode:
-                messages.success(request, "Successful Booking")
-            else:
-                Booking.objects.all().last().delete()
-                messages.warning(request, "Invalid Code")
+    #         if realCode == tempCode:
+    #             messages.success(request, "Successful Booking")
+    #         else:
+    #             Booking.objects.all().last().delete()
+    #             messages.warning(request, "Invalid Code")
 
+    #         return redirect("rooms")
+    
+
+
+    if "verify" in request.POST:
+            messages.success(request, "Successful Booking")
             return redirect("rooms")
+    
+    if "non-verify" in request.POST:
+            Booking.objects.all().last().delete()
+            messages.warning(request, "Booking Failed")
+            return redirect("rooms")
+    
     context = {
         "role": role,
-        "code": tempCode
+        # "code": tempCode
 
     }
     return render(request, path + "verify.html", context)

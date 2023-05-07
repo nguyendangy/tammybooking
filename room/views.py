@@ -909,8 +909,81 @@ def booking_make(request):
     # room.save()
     numbers = request.POST.get('roomid')
     room = Room.objects.get(number=numbers)
+
     guests = Guest.objects.all()  # we pass this to context
     names = []
+    def send(request, receiver):
+        subject = "Payment Details"
+        text = """ 
+            Dear {guestName},
+            Below is our bank account, please pay for booking.
+            Bui Thi Hong Tam
+            the bank number: XXXXXXXXXXX
+
+            Please ignore this email, if you didn't initiate this transaction!
+        """
+        # text = """ 
+        #     Dear {guestName},
+        #     Below is our bank account, please pay for booking.
+        #     Please Copy Paste This Code in the verification Window:
+
+        #     {code}
+
+        #     Please ignore this email, if you didn't initiate this transaction!
+        # """
+        # placing the code and user name in the email bogy text
+        email_text = text.format(
+            guestName=receiver.user.first_name + " " + receiver.user.last_name)
+
+        # seting up the email
+        message_email = ''
+        message = email_text
+        receiver_name = receiver.user.first_name + " " + receiver.user.last_name
+
+        # send email
+        send_mail(
+            receiver_name + " " + subject,  # subject
+            message,  # message
+            message_email,  # from email
+            [receiver.user.email],  # to email
+            fail_silently=False,  # for user in users :
+            # user.email
+        )
+    def send_success_booking(request, receiver):
+        subject = "Success Booking"
+        text = """ 
+            Dear {guestName},
+            Congratulations on your successful booking!
+            Thanks for booking.
+            Please ignore this email, if you didn't initiate this transaction!
+        """
+        # text = """ 
+        #     Dear {guestName},
+        #     Below is our bank account, please pay for booking.
+        #     Please Copy Paste This Code in the verification Window:
+
+        #     {code}
+
+        #     Please ignore this email, if you didn't initiate this transaction!
+        # """
+        # placing the code and user name in the email bogy text
+        email_text = text.format(
+            guestName=receiver.user.first_name + " " + receiver.user.last_name)
+
+        # seting up the email
+        message_email = ''
+        message = email_text
+        receiver_name = receiver.user.first_name + " " + receiver.user.last_name
+
+        # send email
+        send_mail(
+            receiver_name + " " + subject,  # subject
+            message,  # message
+            message_email,  # from email
+            [receiver.user.email],  # to email
+            fail_silently=False,  # for user in users :
+            # user.email
+        )
     if request.method == 'POST':
         if request.POST.get("fd") == "" or request.POST.get("ld") == "":
             messages.warning(request, "You must choose date!")
@@ -953,7 +1026,39 @@ def booking_make(request):
                         d = Dependees(booking=curbooking,
                                       name=request.POST.get(nameid))
                         d.save()
-            return redirect("payment")
+            
+            # sent email notification
+            if role == "guest":
+                send(request, request.user.guest)
+            elif role == "receptionist":
+                send(request, Booking.objects.all().last().guest)
+            return redirect("verify")
+        
+        if 'bookGuestLaterButton' in request.POST:
+            if "guest" in request.POST:
+                curguest = Guest.objects.get(id=request.POST.get("guest"))
+            else:
+                curguest = request.user.guest
+            curbooking = Booking(guest=curguest, roomNumber=room, startDate=request.POST.get(
+                "fd"), endDate=request.POST.get("ld"))
+            curbooking.has_reviewed = True
+            curbooking.save()
+
+            for i in range(room.capacity-1):
+                nameid = "name" + str(i+1)
+                if request.POST.get(nameid) != "":
+                    if request.POST.get(nameid) != None:
+                        d = Dependees(booking=curbooking,
+                                      name=request.POST.get(nameid))
+                        d.save()
+
+            # sent email notification success booking
+            if role == "guest":
+                send_success_booking(request, request.user.guest)
+            elif role == "receptionist":
+                send_success_booking(request, Booking.objects.all().last().guest)
+            messages.success(request, "Successful Booking")
+            return redirect("rooms")
 
     context = {
         "fd": request.POST.get("fd"),

@@ -1,5 +1,38 @@
 {% extends '../index.html' %}
+<style>
+    form {
+  max-width: 500px;
+  margin: auto;
+}
 
+label {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+button {
+  display: inline-block;
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  margin: 10px 20px;
+
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
+    </style>
 {% block context %}
 {% for message in messages %}
 <div class="alert alert-danger" role="alert">
@@ -8,7 +41,7 @@
 {% endfor %}
 <div class="main-page py-4">
     <div class="row justify-content-center">
-        <form action="" method="POST">
+        <!-- <form action="" method="POST">
             {% csrf_token %}
             <div class="row justify-content-center py-5">
                 <label class="input-group-lg" for="verification">Please Enter The Code We Sent to your Email</label>
@@ -21,6 +54,18 @@
             </div>
             <div class="row justify-content-center py-5">
                 <button class="btn btn-lg btn-success py-2" name="verify" type="submit">Verify</button>
+            </div>
+        </form> -->
+        <form action="" method="POST">
+            {% csrf_token %}
+                <h2 class="input-group-lg mt-3" for="verification">
+                    Please check your email and pay.
+                    </h2>
+                <h2 class="input-group-lg" for="verification">
+                        If paid, please press confirm</h2>
+            <div class="row justify-content-center py-5">
+                <button class="btn btn-lg btn-success py-2 mx-3" name="verify" type="submit">Verify</button>
+                <button class="btn btn-lg btn-danger py-2 mx-3" name="non-verify" type="submit">Cancel</button>
             </div>
         </form>
     </div>

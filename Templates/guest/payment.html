@@ -30,9 +30,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
+                        Vui lòng kiểm tra email của bạn và thanh toán.
+                        Nếu đã thanh toán, vui lòng nhấn xác nhận
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <button><a  href="{{ url 'home' }}" class="btn btn-success btn-lg btn-block">Verify<a></button>
+                </div>
+            </div>
+            <!-- <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
                         Payment Details
                     </h3>
-
                 </div>
                 <div class="panel-body">
                     <form action="{% url 'verify' %}" method="POST">
@@ -74,28 +84,13 @@
                         <button type="submit" class="btn btn-success btn-lg btn-block">Pay</button>
                     </form>
                 </div>
-            </div>
+            </div> -->
 
 
         </div>
     </div>
 </div>
 
-<div class="main-page  d-none">
-    <div class="row justify-content-center">
-        <form action="">
-            <div class="row justify-content-center py-5">
-                <label class="input-group-lg" for="verification">Please Enter The Code We Sent to your Email</label>
-            </div>
-            <div class="row justify-content-center py-5">
-                <input class="form-control form-control-lg" type="text" placeholder="Verification" id="verification">
-            </div>
-            <div class="row justify-content-center py-5">
-                <button class="btn btn-lg btn-success py-2">Verify</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 
 {% endblock %}
